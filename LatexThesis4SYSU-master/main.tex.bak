@@ -36,7 +36,7 @@
 	\fancyhf{}
 	%\fancyhead[RO]{\song\xiaosi \leftmark}
 	%\fancyhead[LE]{\song\xiaosi \@ctitle}
-	\lhead{\song\wuhao \@ctitle}  % 左页眉
+	%\lhead{\song\wuhao \@ctitle}  % 左页眉
 	\rhead{\song\wuhao \leftmark}    % 右页眉
 	%\renewcommand{\headrulewidth}{0 pt}
 	\renewcommand{\headrulewidth}{0.5pt}
@@ -67,10 +67,9 @@
 \makeatother
 \setcounter{page}{1}                                 % 单独从 1 开始编页码
 \titleformat{\chapter}{\centering\xiaosan\hei}{\chaptername}{2em}{}
-
                                        % 恢复chapter 标题格式要求
 \include{body/intros}
-\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
+%\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/pre}
 \clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 %\include{body/mns}

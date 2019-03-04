@@ -412,3 +412,30 @@ title = {Analysing Discourse : Textual Analysis for Social Research / N. Fairclo
   biburl    = {https://dblp.org/rec/bib/conf/cvpr/GirshickDDM14},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
+@inproceedings{DBLP:conf/iccv/Girshick15,
+  author    = {Ross B. Girshick},
+  title     = {Fast {R-CNN}},
+  booktitle = {Proceedings of {ICCV}},
+  pages     = {1440--1448},
+  year      = {2015},
+  crossref  = {DBLP:conf/iccv/2015},
+  url       = {https://doi.org/10.1109/ICCV.2015.169},
+  doi       = {10.1109/ICCV.2015.169},
+  timestamp = {Wed, 24 May 2017 08:31:04 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/iccv/Girshick15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+@article{lecun1998gradient-based,
+title={Gradient-based learning applied to document recognition},
+author={Lecun, Yann and Bottou, Leon and Bengio, Yoshua and Haffner, Patrick},
+journal={Proceedings of the IEEE},
+volume={86},
+number={11},
+pages={2278--2324},
+year={1998}}
+
+@article{krizhevsky2012imagenet,
+title={ImageNet Classification with Deep Convolutional Neural Networks},
+author={Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
+pages={1097--1105},
+year={2012}}

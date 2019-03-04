@@ -12,44 +12,8 @@
 \subsection{神经网络}
 
 \subsubsection{一般神经网络}
-神经网络（neural network）的方面的研究就出现了，早起的神经网络主要是指生物学中的``生物神经网络''，在当前计算机领域特指``神经网络学习''。神经网络最基本的结构是神经元模型，神经元模型如图\ref{fig:nn-example}，在这个模型中包括输入端、神经元权重（weight）、偏差（bias）、激活函数（activation function）、阀值、输出。在这个模型中，当前神经元接收其它$n$个神经元的输入，与连接权重相乘之后加上偏差，然后激活函数的处理得到激活值输出。
+神经网络（neural network）的方面的研究就出现了，早起的神经网络主要是指生物学中的·``生物神经网络''，在当前计算机领域特指``神经网络学习''。神经网络最基本的结构是神经元模型，
 
-理想中的激活函数是如公式\ref{eq:activate-sgn}，将输入值映射为输出值"1"或者"0"，其中"1"对应神经元兴奋，"0"对应于神经元抑制，但是因为该阶跃函数具有不连续、不光滑等性质。因此常采用Sigmoid函数作为激活函数，一般来说激活函数是非线性的、可微的。
-\begin{equation}\label{eq:activate-sgn}
-    sgn(x)=\left\{
-    \begin{aligned}
-    1, x\geq 0 \\
-    0, x<0 \\
-    \end{aligned}
-    \right.
-\end{equation}
-例如sigmoid函数可以把$（-\infty,+\infty）$输入值映射到(0,1)区间内。常见的激活函数还有tanh(hyperbolic tangent, tanh)函数、修正线性单元(rectified linear units,RELU)函数等等。表\ref{tab:activate-func}详细的列出了3个常用激活函数的原函数、一阶导数、以及函数的值域。
-\begin{table}[htpb]
-  \centering
-  \caption{}
-  \label{tab:activate-func}
-  \begin{tabular}{c|c}
-    \toprule[1.5pt]
-    函数名称 & 原函数 ~~~~~一阶导数$f^{'}(x)$~~~~~原函数值域 \\
-    \midrule
-    sigmoid函数 & $\sigma(x) = \frac{1}{1+e^{-x}}$ ~~~~ $f^{x}(x)=\sigma(x)(1-\sigma(x))$ ~~~~ (0,1) \\
-    tanh函数 & $tanh(x) = \frac{e^x-e^{-x}}{e^x+e^{-x}}$ ~~~~ $f^{'}(x)=1-tanh(x)^{2}$ ~~~~ (-1,1) \\
-    ReLU函数 & $relu(x) = max(0,x)$ ~~~~ $sgn(x)=\left\{\begin{aligned}1, x\geq 0 \\0, x<0 \\\end{aligned}\right.$ ~~~~ [0,+\infty)
-    \bottomrule[1.5pt]
-  \end{tabular}
-\end{table}
-
-
-\begin{figure}[htpb]
-	\centering
-	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
-	\includegraphics[width=0.95 \textwidth,clip]{nn.png}
-	%\hspace{0.02\textwidth}
-	%\vspace*{-0.08cm}
-    \caption{神经元模型示意图}
-	\vspace*{-3.5mm}
-	\label{fig:nn-example}
-\end{figure}
 \subsubsection{卷积神经网络的介绍}
 卷积神经网络（Convolutional Neural Network,CNN）是深度学习的代表算法之一，由LeCun首次实现并且应用。卷积神经网络的主要作用是提取特征，该网络受到生物学的影响，相比较与全连接神经网络，卷积神经网络的主要特性包括局部感知和参数共享。局部感知指对于具有空间特征的输入来说，每个神经元没必要知道全局的信息，只需要感知局部的信息，然后在更高层将局部的信息合并起来得到更高层的信息。对于权值共享来说，每个卷积核与位置无关，因为假设对于图像来说，其中某一部分的统计特性和其它的部分是一样的，所以对于其中的一个卷积核来说，可以应用到图像上的任何地方去。所以，局部感知和参数共享不仅能提取到更多的特征，并且能大幅度减少参数的数量。因此，卷积神经网络广泛的应用在图像、视频、音频和文本等各种模态的数据上，并且都取得了巨大的成功。
 
@@ -78,7 +42,7 @@
 \end{figure}
 
 综合上述对于卷积神经网络的卷积和池化的介绍，因为每层的输入和输出都表现为特征图的形式，因此卷积神经网络可以和全连接的网络一样可以有多层，并且取得更好的效果。LeNet-5\cite{lecun1998gradient-based}是
-Yang LeCun等人在$1988$年提出的，它是第一个成功应用于数字识别问题的卷积神经网络，在著名的MINIST数据集上，LeNet-5可以取得大约$99.2\%$的准确率。LeNet-5是一个经典的卷积神经网络，前5层分别是卷积层和池化层，后2层全连接层。之后于$2012$ 年提出的AlexNet\cite{DBLP:conf/nips/KrizhevskySH12}，其网络结构如图\ref{fig:alexnet-example}首次使用Relu激活函数替代Sigmoid，并且验证了其在较深网络上的作用，成功解决了Sigmoid在较深网络的梯度弥散问题，虽然Relu 很早就提出了。其次，AlexNet首次在训练中使用dropout层抑制一部分激活的神经元，以避免过拟合，并且通过实践证明了效果。与此同时，模型还采用了数据增强等trick来防止过拟合，使用cuda提高训练速度。而之后提出的VGG\cite{DBLP:journals/corr/SimonyanZ14a}，相比较与之前的LeNet和AlexNet，最大的特点是网络更深，具有16-19层，不包含池化和最后的softmax层。
+Yang LeCun等人在$1988$年提出的，它是第一个成功应用于数字识别问题的卷积神经网络，在著名的MINIST数据集上，LeNet-5可以取得大约$99.2\%$的准确率。LeNet-5是一个经典的卷积神经网络，前5层分别是卷积层和池化层，后2层全连接层。之后于$2012$年提出的AlexNet\cite{DBLP:conf/nips/KrizhevskySH12}，其网络结构如图\ref{fig:alexnet-example}首次使用Relu激活函数替代Sigmoid，并且验证了其在较深网络上的作用，成功解决了Sigmoid在较深网络的梯度弥散问题，虽然Relu 很早就提出了。其次，AlexNet首次在训练中使用dropout层抑制一部分激活的神经元，以避免过拟合，并且通过实践证明了效果。与此同时，模型还采用了数据增强等trick来防止过拟合，使用cuda提高训练速度。而之后提出的VGG\cite{DBLP:journals/corr/SimonyanZ14a}，相比较与之前的LeNet和AlexNet，最大的特点是网络更深，具有16-19层，不包含池化和最后的softmax层。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
