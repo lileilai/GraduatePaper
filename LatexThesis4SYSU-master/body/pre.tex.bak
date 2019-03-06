@@ -63,7 +63,7 @@ $H_{\theta}(x) = f_3(w_{3}f_2(w_{2}(f_{1}(w_{1}x+b_1))+b_2)+b_3)$, 其中$f_{1},
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
-	\includegraphics[width=0.95 \textwidth,clip]{multilayer.png}
+	\includegraphics[width=0.80 \textwidth,clip]{multilayer.png}
 	%\hspace{0.02\textwidth}
 	%\vspace*{-0.08cm}
     \caption{两个隐藏层的神经网络示意图}
@@ -185,4 +185,14 @@ Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会�
     \end{split}
 \end{equation}
 
-\textbf{GRM}(2018)\cite{wang2018deep}同样认为引入当前人对的周边物体的信息对判断人对之间的社会关系是有帮助的，但是现有前面的模型忽略了周边物体的语义和这些物体以及社会关系的先验知识。除此之外，周边物体和社会关系的交互太过简化了。因此，GRM采用深度学习结合先验知识制定了一个图推理模型（Graph Reasoning Model）来实现社会关系检测任务，
+\textbf{GRM}（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的信息对判断人对之间的社会关系是有帮助的，但是现有前面的模型忽略了周边物体的语义和这些物体以及社会关系的先验知识。除此之外，周边物体和社会关系的交互太过简化了。因此，GRM采用深度学习结合先验知识制定了一个图推理模型（Graph Reasoning Model）来实现社会关系检测任务。首先，GRM基于训练集中的样本构建了一个描述物体和社会关系共现的图谱。形式化来说，先验知识图谱表示为$\mathrm{G} = \{\mathrm{V},\mathrm{A}\}$，其中$\mathrm{V}$表示图上的节点集合，$\mathrm{A}$表示节点间的邻接矩阵。当前的图$\mathrm{G}$包含两种节点类型，一种节点表示社会关系，一种表示物体类别，针对当前图片场景构建的图的节点来说，采用相应图片对应区域抽取出的特征向量初始化。对于社会关系节点，这里采用Li等人的方式\cite{li2017dual-glance}的方式修剪出三部分包含人的区域，利用预训练好的ResNet提取出特征向量，与空间信息等特征向量进行拼接得到一个$d$维的特征向量$f_{h},f_{h} \in \mathrm{R}^d$。$f_h$作为所有社会关系节点的初始化向量。对于物体节点来说，我们需要用到在大规模训练集上预先训练好的faster-RCNN\cite{ren2015faster}，由于PISC-coarse和PISC-fine等数据集并没有标注好的物体类别。这里的大规模数据集指的是COCO\cite{lin2014microsoft}，COCO是专门为了物体识别标注的数据集，包含我们日常生活中常见的80类的物体。利用物体检测模型提取出高于置信度$\phi$（$\phi$是一个超参数），对于这里未检测到的物体，采用全$0$的特征向量。
+
+前文提到了图片上人对的特征和物体的信特征抽取，GRM接下来需要执行不同节点间的信息传播，实现表示社会关系的关系节点和表示当前图片场景下的物体节点的消息交互。对于其中GGNN的执行过程，对于图$\mathrm{G}$ 中的节点$v$，其对应的隐藏状态为$h_{v}$，GGNN模型融合邻接节点的信息来更新$v$节点隐藏状态，GGNN采用类似于Gated Recurrent Unit（GRU）\cite{cho2014learning}机制的方式实现节点间的信息融合。所以，对于第$t$步GRU unit的输入为$a_v^t$和$h_v^t$，$a_v^t$是融合邻接物体节点的信息向量，融合方式如公式
+\begin{equation}\label{eq-aggre}
+    a_v^t = A_{v}^{\tau}[h_1^{t-1}...h_{|V|}^{t-1}]^{\tau} + b
+\end{equation}
+
+
+之后利用GGNN(Gated Graph Neural Network)网络\cite{li2016gated}来执行图上的消息传播。通过GGNN，能探索人对和图片场景中物体的交互。物体的类别是一个关键的因素用于区分不同的社会关系，但是由于有的物体的信息对于判定社会关系时不重要的、甚至起到了干扰的作用，因此GRM提出了图注意力的机制，有选择的采用能起到区分不同社会关系的物体节点，按照区分能力的大小给予不同的权重。综上所述，GRM模型提供了一个可解释的方法来提高社会关系检测的能力，从周边场景中推理得到有效的信息。
+
+

@@ -1,13 +1,6 @@
 % !Mode:: "TeX:UTF-8"
 
-\pagestyle{fancy}
-  \fancyhf{}
-  %\fancyhead[C]{\song\wuhao \@cheading}  % 页眉
-  \lhead{\song\wuhao \@cheading}  % 左页眉
-  %\rhead{\prechaptername\CJKnumber{\thechapter}\postchaptername}    % 右页眉
-  \rhead{\prechaptername~\thechapter~\postchaptername}    % 右页眉
-  \fancyfoot[C]{\song\xiaowu ~\thepage~}
-\newlength{\@title@width}
+
 \chapter{引言}
 \label{ch:intro}
 
@@ -90,4 +83,6 @@
 \begin{equation}
 1+1=2
 \end{equation}
+
+\subsection{}
 
