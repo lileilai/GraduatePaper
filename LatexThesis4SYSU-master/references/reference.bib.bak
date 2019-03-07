@@ -254,3 +254,50 @@ volume={34},
 number={2},
 pages={201--217},
 year={2015}}
+
+@article{robicquet2016learning,
+title={Learning Social Etiquette: Human Trajectory Understanding In Crowded Scenes},
+author={Robicquet, Alexandre and Sadeghian, Amir and Alahi, Alexandre and Savarese, Silvio},
+volume={9912},
+pages={549--565},
+year={2016}}
+
+@article{chen2012discovering,
+title={Discovering informative social subgraphs and predicting pairwise relationships from group photos},
+author={Chen, Yanying and Hsu, Winston H and Liao, Hongyuan Mark},
+pages={669--678},
+year={2012}}
+
+@article{qin2012improving,
+title={Improving multi-target tracking via social grouping},
+author={Qin, Zhen and Shelton, Christian R},
+pages={1972--1978},
+year={2012}}
+
+@article{direkoǧlu2012team,
+title={Team activity recognition in sports},
+author={Direkoǧlu, Cem and Connor, Noel E O},
+pages={69--83},
+year={2012}}
+
+@article{lan2012social,
+title={Social roles in hierarchical models for human activity recognition},
+author={Lan, Tian and Sigal, Leonid and Mori, Greg},
+pages={1354--1361},
+year={2012}}
+
+@article{lan2012discriminative,
+title={Discriminative Latent Models for Recognizing Contextual Group Activities},
+author={Lan, Tian and Wang, Yang and Yang, Weilong and Robinovitch, Stephen N and Mori, Greg},
+journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+volume={34},
+number={8},
+pages={1549--1562},
+year={2012}}
+
+@article{lu2016visual,
+title={Visual Relationship Detection with Language Priors},
+author={Lu, Cewu and Krishna, Ranjay and Bernstein, Michael S and Feifei, Li},
+journal={european conference on computer vision},
+pages={852--869},
+year={2016}}
