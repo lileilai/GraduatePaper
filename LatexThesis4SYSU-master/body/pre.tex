@@ -126,10 +126,43 @@ ResNet\cite{he2016deep}是何凯明等人(2016)提出的，针对前面网络并
 
 综上，卷积神经网络自提出以来，得到了极大的发展，表现为新的激活函数，降低过拟合的dropout层，残差学习模块，加上cuda硬件加速的发展，我们能训练更复杂更深的神经网络，取得更好的性能。
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 图推理 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{消息传递}
+
+图推理是消息传递的一种形式，条件随机场（Conditional Random Field）广泛的用在了图推理问题上。Johnson\cite{johnson2015image}将CRF用于图像检索领域的场景图谱与对应图片的绑定的推断。本文用的方法类似于CRFasRNN\cite{zheng2015conditional}和Graph-LSTM\cite{liang2016semantic}。本文的方法是收到\cite{xu2017scene}的启发，Xu在场景图谱的生成任务中，设计了原始图和对偶图，原始图用于图片中物体节点的预测，对偶图用于关系节点的预测。和之前不同的是，我们只是对其中的关系节点构建图，通过关系的消息传播机制，我们的模型是迭代的提纯社会关系理解的预测。而不是像标准的循环神经网络（Recurrent Neural Network）只是单次预测，并不能达到提纯的效果。下面的部分我们介绍关于CRF和本文中用到了循环神经网络（RNN）以及门控循环网络（Gated Recurrent Unit,GRU）。
+
+\subsubsection{条件随机场}
+CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\texbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\texbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
+\textbf{X}的条件下\textbf{Y}的条件概率分布。令G = (V,E)表示一个无向图，V是节点的集合，E是无向边，$Y_{v}$表示与节点v对应的标记向量，$w~v$表示在图中所有与节点v有边连接的所有节点w，
+$w \neq v$表示节点v以外的所有节点，如果所有的节点$Y_v$都满足公式\ref{eq-crf}  的马尔科夫性质，那么称(Y,X)为一个条件随机场。
+\begin{equation} \label{eq-crf}
+    P(Y_{v}|X,Y_w,w \neq v) = P(Y_v|X,Y_w,w~v)
+\end{equation}
+CRF引入了特征函数（指数函数的形式）,对于其中的特例线性链条件随机场，线性链条件随机场如图\ref{fig:crf}。
+\begin{figure}[htpb]
+	\centering
+	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
+	\includegraphics[width=0.75 \textwidth,clip]{crf.png}
+	%\hspace{0.02\textwidth}
+	%\vspace*{-0.08cm}
+    \caption{线性链条件随机场}
+	\vspace*{-3.5mm}
+	\label{fig:crf}
+\end{figure}
+其中概率分布如下所示，其中t_{k}和s_{l}都是特征函数，$\lambda_{k}$和$u_{l}$对应的权值。
+\begin{equation}
+    P(y|x) = \frac{1}{Z}\mathbf{exp}((\sum_{i,k})\lambda_{k}t_{k}(y_{i-1},y_{i},x,i)+\sum_{i,l}\mu_{l}s_{l}(y_{i},x,i))
+\end{equation}
+
+\subsubsection{循环神经网路}
+
+
+
 
 \subsection{物体检测与识别}
 
-在社会关系识别的任务中，有一个重要的模块是利用物体识别模型得到人的场景信息，即采用物体识别模型识别去当前图片中包含了哪些物体，得到该物体在图片的区域。物体识别的模型包括Ross等人提出的RCNN\cite{girshick2014rich}，fast-RCNN\cite{girshick2015fast}，以及Ren等人（2016）\cite{ren2015faster}提出的faster-RCNN。前面提到的三个模型都是基于区域的物体检测模型，RCNN\cite{girshick2014rich}首次提出在目标图像中有多个目标框，然后判断目标框是否包含物体，具体的检测步骤如下：
+在社会关系识别的任务中，有一个重要的模块是利用物体识别模型得到人的场景信息，即采用物体识别模型识别去当前图片中包含了哪些物体，得到该物体在图片的区域。物体识别的模型包括Ross等人提出的RCNN\cite{girshick2014rich}，fast-RCNN\cite{girshick2015fast}，以及Ren等人（2016）\cite{ren2015faster}提出的faster-RCNN。前面提到的三个模型都是基于区域的物体检测模型，RCNN\cite{girshick2014rich} 首次提出在目标图像中有多个目标框，然后判断目标框是否包含物体，具体的检测步骤如下：
 （1）其中采用选择性搜索的方法得到图片中的所需要的目标框区域，将得到的区域调整为卷积神经网络输入的消息。
 （2）利用一个预训练好的卷积神经网络，提取第一步得到的区域中的特征。
 （3）将第二步中得到的特征当作一个线性SVM的输入，得到物体的类别，另外训练一个线性回归模型得到物体的目标框。

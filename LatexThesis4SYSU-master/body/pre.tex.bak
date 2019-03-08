@@ -126,10 +126,44 @@ ResNet\cite{he2016deep}是何凯明等人(2016)提出的，针对前面网络并
 
 综上，卷积神经网络自提出以来，得到了极大的发展，表现为新的激活函数，降低过拟合的dropout层，残差学习模块，加上cuda硬件加速的发展，我们能训练更复杂更深的神经网络，取得更好的性能。
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 图推理 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{消息传递}
+
+图推理是消息传递的一种形式，条件随机场（Conditional Random Field）广泛的用在了图推理问题上。Johnson\cite{johnson2015image}将CRF用于图像检索领域的场景图谱与对应图片的绑定的推断。本文用的方法类似于CRFasRNN\cite{zheng2015conditional}和Graph-LSTM\cite{liang2016semantic}。本文的方法是收到\cite{xu2017scene}的启发，Xu在场景图谱的生成任务中，设计了原始图和对偶图，原始图用于图片中物体节点的预测，对偶图用于关系节点的预测。和之前不同的是，我们只是对其中的关系节点构建图，通过关系的消息传播机制，我们的模型是迭代的提纯社会关系理解的预测。而不是像标准的循环神经网络（Recurrent Neural Network）只是单次预测，并不能达到提纯的效果。下面的部分我们介绍关于CRF和本文中用到了循环神经网络（RNN）以及门控循环网络（Gated Recurrent Unit,GRU）。
+
+\subsubsection{条件随机场}
+CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\texbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\texbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
+\textbf{X}的条件下\textbf{Y}的条件概率分布。令G = (V,E)表示一个无向图，V是节点的集合，E是无向边，$Y_{v}$表示与节点v对应的标记向量，$w~v$表示在图中所有与节点v有边连接的所有节点w，
+$w \neq v$表示节点v以外的所有节点，如果所有的节点$Y_v$都满足公式\ref{eq-crf}  的马尔科夫性质，那么称(Y,X)为一个条件随机场。
+\begin{equation} \label{eq-crf}
+    P(Y_{v}|X,Y_w,w \neq v) = P(Y_v|X,Y_w,w~v)
+\end{equation}
+CRF引入了特征函数（指数函数的形式）,对于其中的特例线性链条件随机场，线性链条件随机场如图\ref{fig:crf}。
+\begin{figure}[htpb]
+	\centering
+	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
+	\includegraphics[width=0.75 \textwidth,clip]{crf.png}
+	%\hspace{0.02\textwidth}
+	%\vspace*{-0.08cm}
+    \caption{线性链条件随机场}
+	\vspace*{-3.5mm}
+	\label{fig:crf}
+\end{figure}
+其中
+\begin{equation}
+
+    P(y|x) = \frac{1}{Z}\mathbf{exp}((\sum_{i,k})\lambda_{k}t_{k}(y_{i-1},y_{i},x,i)+\sum_{i,l}\mu_{l}s_{l}(y_{i},x,i))
+\end{equation}
+
+\subsubsection{循环神经网路}
+
+
+
 
 \subsection{物体检测与识别}
 
-在社会关系识别的任务中，有一个重要的模块是利用物体识别模型得到人的场景信息，即采用物体识别模型识别去当前图片中包含了哪些物体，得到该物体在图片的区域。物体识别的模型包括Ross等人提出的RCNN\cite{girshick2014rich}，fast-RCNN\cite{girshick2015fast}，以及Ren等人（2016）\cite{ren2015faster}提出的faster-RCNN。前面提到的三个模型都是基于区域的物体检测模型，RCNN\cite{girshick2014rich}首次提出在目标图像中有多个目标框，然后判断目标框是否包含物体，具体的检测步骤如下：
+在社会关系识别的任务中，有一个重要的模块是利用物体识别模型得到人的场景信息，即采用物体识别模型识别去当前图片中包含了哪些物体，得到该物体在图片的区域。物体识别的模型包括Ross等人提出的RCNN\cite{girshick2014rich}，fast-RCNN\cite{girshick2015fast}，以及Ren等人（2016）\cite{ren2015faster}提出的faster-RCNN。前面提到的三个模型都是基于区域的物体检测模型，RCNN\cite{girshick2014rich} 首次提出在目标图像中有多个目标框，然后判断目标框是否包含物体，具体的检测步骤如下：
 （1）其中采用选择性搜索的方法得到图片中的所需要的目标框区域，将得到的区域调整为卷积神经网络输入的消息。
 （2）利用一个预训练好的卷积神经网络，提取第一步得到的区域中的特征。
 （3）将第二步中得到的特征当作一个线性SVM的输入，得到物体的类别，另外训练一个线性回归模型得到物体的目标框。
@@ -186,13 +220,26 @@ Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会�
 \end{equation}
 
 \textbf{GRM}（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的信息对判断人对之间的社会关系是有帮助的，但是现有前面的模型忽略了周边物体的语义和这些物体以及社会关系的先验知识。除此之外，周边物体和社会关系的交互太过简化了。因此，GRM采用深度学习结合先验知识制定了一个图推理模型（Graph Reasoning Model）来实现社会关系检测任务。首先，GRM基于训练集中的样本构建了一个描述物体和社会关系共现的图谱。形式化来说，先验知识图谱表示为$\mathrm{G} = \{\mathrm{V},\mathrm{A}\}$，其中$\mathrm{V}$表示图上的节点集合，$\mathrm{A}$表示节点间的邻接矩阵。当前的图$\mathrm{G}$包含两种节点类型，一种节点表示社会关系，一种表示物体类别，针对当前图片场景构建的图的节点来说，采用相应图片对应区域抽取出的特征向量初始化。对于社会关系节点，这里采用Li等人的方式\cite{li2017dual-glance}的方式修剪出三部分包含人的区域，利用预训练好的ResNet提取出特征向量，与空间信息等特征向量进行拼接得到一个$d$维的特征向量$f_{h},f_{h} \in \mathrm{R}^d$。$f_h$作为所有社会关系节点的初始化向量。对于物体节点来说，我们需要用到在大规模训练集上预先训练好的faster-RCNN\cite{ren2015faster}，由于PISC-coarse和PISC-fine等数据集并没有标注好的物体类别。这里的大规模数据集指的是COCO\cite{lin2014microsoft}，COCO是专门为了物体识别标注的数据集，包含我们日常生活中常见的80类的物体。利用物体检测模型提取出高于置信度$\phi$（$\phi$是一个超参数），对于这里未检测到的物体，采用全$0$的特征向量。
+之后利用GGNN(Gated Graph Neural Network)网络\cite{li2016gated}来执行图上的消息传播。通过GGNN，能探索人对和图片场景中物体的交互。物体的类别是一个关键的因素用于区分不同的社会关系，但是由于有的物体的信息对于判定社会关系时不重要的、甚至起到了干扰的作用，因此GRM提出了图注意力的机制，有选择的采用能起到区分不同社会关系的物体节点，按照区分能力的大小给予不同的权重。综上所述，GRM模型提供了一个可解释的方法来提高社会关系检测的能力，从周边场景中推理得到有效的信息。
 
-前文提到了图片上人对的特征和物体的信特征抽取，GRM接下来需要执行不同节点间的信息传播，实现表示社会关系的关系节点和表示当前图片场景下的物体节点的消息交互。对于其中GGNN的执行过程，对于图$\mathrm{G}$ 中的节点$v$，其对应的隐藏状态为$h_{v}$，GGNN模型融合邻接节点的信息来更新$v$节点隐藏状态，GGNN采用类似于Gated Recurrent Unit（GRU）\cite{cho2014learning}机制的方式实现节点间的信息融合。所以，对于第$t$步GRU unit的输入为$a_v^t$和$h_v^t$，$a_v^t$是融合邻接物体节点的信息向量，融合方式如公式
+前文提到了图片上人对的特征和物体的信特征抽取，GRM接下来需要执行不同节点间的信息传播，对于其中GGNN的执行过程，对于图$\mathrm{G}$ 中的节点$v$，其对应的隐藏状态为$h_{v}$，GGNN模型融合邻接节点的信息来更新$v$节点隐藏状态，GGNN采用类似于Gated Recurrent Unit（GRU）\cite{cho2014learning}机制的方式实现节点间的信息融合。所以，对于第$t$步GRU unit的输入为$a_v^t$和$h_v^t$，$a_v^t$是融合邻接物体节点的信息向量，融合方式如公式\ref{eq-aggre}，其中$A_v^{\tau}$代表前面提到的物体和社会关系的邻接矩阵，矩阵的值为它们在训练集中共现的概率。
 \begin{equation}\label{eq-aggre}
-    a_v^t = A_{v}^{\tau}[h_1^{t-1}...h_{|V|}^{t-1}]^{\tau} + b
+    a_v^t = A_{v}^{\tau}[~h_1^{t-1}~...~h_{|V|}^{t-1}~]^{\tau} + b
+\end{equation}
+经过$T$此GRU的迭代后，分别得到物体节点、关系节点的隐藏层表示。但是由于周边的物体在区分不同的关系起到不同的作用，GRM采用attention机制来结合物体的信息。attention的如公式\ref{eq:graph-atte}，其中得到邻接物体节点权重为$\alpha_{ij}$。进过GGNN、attention两个模块后，得到表示社会关系的特征向量$\mathbf{f}_{i}$，用做最后的分类，取概率最大的作为当前人对的关系。
+\begin{equation}\label{eq:graph-atte}
+    \begin{split}
+        \mathbf{h}_{ij} &= tanh(\mathbf{U}^ah_{r_{i}}) \odot tanh(\mathbf{V}^ah_{o_{j}}) \\
+        e_{ij} &= \mathbf{Atten}(\mathbf{h}_{ij}) \\
+        \alpha_{ij} &= \sigma(e_{ij})
+    \end{split}
 \end{equation}
 
+\subsubsection{}
 
-之后利用GGNN(Gated Graph Neural Network)网络\cite{li2016gated}来执行图上的消息传播。通过GGNN，能探索人对和图片场景中物体的交互。物体的类别是一个关键的因素用于区分不同的社会关系，但是由于有的物体的信息对于判定社会关系时不重要的、甚至起到了干扰的作用，因此GRM提出了图注意力的机制，有选择的采用能起到区分不同社会关系的物体节点，按照区分能力的大小给予不同的权重。综上所述，GRM模型提供了一个可解释的方法来提高社会关系检测的能力，从周边场景中推理得到有效的信息。
+
+
+
+
 
 
