@@ -150,15 +150,24 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 	\vspace*{-3.5mm}
 	\label{fig:crf}
 \end{figure}
-其中
+其中概率分布如下所示，其中t_{k}和s_{l}都是特征函数，$\lambda_{k}$和$\mu_{l}$对应的权值。
 \begin{equation}
-
     P(y|x) = \frac{1}{Z}\mathbf{exp}((\sum_{i,k})\lambda_{k}t_{k}(y_{i-1},y_{i},x,i)+\sum_{i,l}\mu_{l}s_{l}(y_{i},x,i))
 \end{equation}
 
 \subsubsection{循环神经网路}
 
-
+循环神经网络（RNN）是神经网络的一种，主要用于处理序列序列建模问题。其基本结构如图\ref{fig:rnn}所示，相比其他类型的网络，其就是对神经网络展开k个步骤，所有的输入共享一个网络模块\textbf{S}。假设其中的参数为$\mathbf{W}_s$和$\mathbf{W}_x$，那么所有模块的这个两个参数是共享的。
+\begin{figure}[htpb]
+	\centering
+	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
+	\includegraphics[width=0.75 \textwidth,clip]{rnn.png}
+	%\hspace{0.02\textwidth}
+	%\vspace*{-0.08cm}
+    \caption{}
+	\vspace*{-3.5mm}
+	\label{fig:rnn}
+\end{figure}
 
 
 \subsection{物体检测与识别}
@@ -200,7 +209,7 @@ Zhang~等\cite{zhang2015learning}提出的模型认为从心理学的角度出�
 \end{equation}
 基于以上的工作，该模型同样认为人的面部属性对最终的关系预测可以起到关键的作用。
 
-Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会检测的任务提出了包含两个关系粒度的数据集，PISC-coarse和PISC-fine（2017）\cite{li2017dual-glance}。该工作首次提出了利用图片中的场景来协助预测两个人之间的关系，场景具体表示为该图片中的物体。直观来说，如果一幅图片中包含电脑桌子等物体，那么大概率是``同事''关系。\textbf{dual-glance}模型分为两个模块，first glance和second glance，first glance 的输入为一张图片$\mathbf{I}$ 和两个人身体的包围盒。针对图片$I$，首先修剪出3个小块，前两个小块分别覆盖住两个人，$p_1$和$p_2$，第三个小块覆盖两个人，表示为$p_{u}$。这三个小块的像素被修正为$224 \times 224$大小，作为后续三个CNNs 网络的输入，其中$p_1$和$p_2$的特征抽取网络是共享网络参数的。此外，包围盒的位置信息对于视觉信息是一种补充，例如亲密关系往往的离得比较近的，无关系的两个人对的包围盒离的较远。位置信息$\mathbf{g}$，经过预训练的ResNet\cite{he2016deep} 抽取得到表示人对关系的特征向量为$v$，经过拼接和全连接网络后得到这个人对的特征向量$v_{top}$。
+Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会检测的任务提出了包含两个关系粒度的数据集，PISC-coarse和PISC-fine（2017）\cite{li2017dual-glance}。该工作首次提出了利用图片中的场景来协助预测两个人之间的关系，场景具体表示为该图片中的物体。直观来说，如果一幅图片中包含电脑桌子等物体，那么大概率是``同事''关系。\textbf{dual-glance}模型分为两个模块，first glance和second glance，first glance 的输入为一张图片$\mathbf{I}$ 和两个人身体的包围盒。针对图片$I$，首先修剪出3个小块，前两个小块分别覆盖住两个人，$p_1$和$p_2$，第三个小块覆盖两个人，表示为$p_{u}$。这三个小块的像素被修正为$224 \times 224$大小，作为后续三个CNNs 网络的输入，其中$p_1$和$p_2$ 的特征抽取网络是共享网络参数的。此外，包围盒的位置信息对于视觉信息是一种补充，例如亲密关系往往的离得比较近的，无关系的两个人对的包围盒离的较远。位置信息$\mathbf{g}$，经过预训练的ResNet\cite{he2016deep} 抽取得到表示人对关系的特征向量为$v$，经过拼接和全连接网络后得到这个人对的特征向量$v_{top}$。
 
 对于second glance模块，模型利用faster-RCNN\cite{ren2015faster}中的RPN产生一系列的区域候选框$P_{I}$，这些候选框包含物体的概率大于超参数$m$。对于一个人对，我们从集合$P_{I}$ 中选择部分候选框$R(b1,b2;I)$，选择方式如\ref{eq:select-rp}，其中函数$G(b1,b2)$表示两个包围盒的IOU，$\tau_{u}$是阀值。
 \begin{equation}\label{eq:select-rp}

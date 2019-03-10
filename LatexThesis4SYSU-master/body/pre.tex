@@ -133,11 +133,11 @@ ResNet\cite{he2016deep}是何凯明等人(2016)提出的，针对前面网络并
 图推理是消息传递的一种形式，条件随机场（Conditional Random Field）广泛的用在了图推理问题上。Johnson\cite{johnson2015image}将CRF用于图像检索领域的场景图谱与对应图片的绑定的推断。本文用的方法类似于CRFasRNN\cite{zheng2015conditional}和Graph-LSTM\cite{liang2016semantic}。本文的方法是收到\cite{xu2017scene}的启发，Xu在场景图谱的生成任务中，设计了原始图和对偶图，原始图用于图片中物体节点的预测，对偶图用于关系节点的预测。和之前不同的是，我们只是对其中的关系节点构建图，通过关系的消息传播机制，我们的模型是迭代的提纯社会关系理解的预测。而不是像标准的循环神经网络（Recurrent Neural Network）只是单次预测，并不能达到提纯的效果。下面的部分我们介绍关于CRF和本文中用到了循环神经网络（RNN）以及门控循环网络（Gated Recurrent Unit,GRU）。
 
 \subsubsection{条件随机场}
-CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\texbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\texbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
+CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\textbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\textbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
 \textbf{X}的条件下\textbf{Y}的条件概率分布。令G = (V,E)表示一个无向图，V是节点的集合，E是无向边，$Y_{v}$表示与节点v对应的标记向量，$w~v$表示在图中所有与节点v有边连接的所有节点w，
 $w \neq v$表示节点v以外的所有节点，如果所有的节点$Y_v$都满足公式\ref{eq-crf}  的马尔科夫性质，那么称(Y,X)为一个条件随机场。
 \begin{equation} \label{eq-crf}
-    P(Y_{v}|X,Y_w,w \neq v) = P(Y_v|X,Y_w,w~v)
+    P(~Y_{v}~|~X,Y_w,w \neq v~) = P(~Y_v~|~X,Y_w,w~v~)
 \end{equation}
 CRF引入了特征函数（指数函数的形式）,对于其中的特例线性链条件随机场，线性链条件随机场如图\ref{fig:crf}。
 \begin{figure}[htpb]
@@ -150,15 +150,42 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 	\vspace*{-3.5mm}
 	\label{fig:crf}
 \end{figure}
-其中概率分布如下所示，其中t_{k}和s_{l}都是特征函数，$\lambda_{k}$和$u_{l}$对应的权值。
+其中概率分布如下所示，其中$t_{k}$和$s_{l}$都是特征函数，$\lambda_{k}$和$\mu_{l}$对应的权值。
 \begin{equation}
-    P(y|x) = \frac{1}{Z}\mathbf{exp}((\sum_{i,k})\lambda_{k}t_{k}(y_{i-1},y_{i},x,i)+\sum_{i,l}\mu_{l}s_{l}(y_{i},x,i))
+    P(y~|~x) = \frac{1}{Z}\mathbf{exp}((\sum_{i,k})\lambda_{k}t_{k}(y_{i-1},y_{i},x,i)+\sum_{i,l}\mu_{l}s_{l}(y_{i},x,i))
 \end{equation}
 
 \subsubsection{循环神经网路}
 
+循环神经网络（RNN）是神经网络的一种，主要用于处理序列序列建模问题。其基本结构如图\ref{fig:rnn}所示，相比其他类型的网络，其就是对神经网络展开k个步骤，所有的输入共享一个网络模块\textbf{S}。假设其中的参数为$\mathbf{W}_s$和$\mathbf{W}_x$，那么所有模块的这个两个参数是共享的。对于标准的RNN结构，第t步，RNN的输出向量$\mathbf{s}_t$如公式\ref{eq:rnn}所示计算。
+\begin{figure}[htpb]
+	\centering
+	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
+	\includegraphics[width=0.75 \textwidth,clip]{rnn.png}
+	%\hspace{0.02\textwidth}
+	%\vspace*{-0.08cm}
+    \caption{}
+	\vspace*{-3.5mm}
+	\label{fig:rnn}
+\end{figure}
+由于标准的RNN网络会由于结构的问题，无法处理梯度消失和梯度爆炸的问题。后续的研究人员对于其提出的梯度消失的问题，有LSTM\cite{hochreiter1997long}和GRU\cite{cho2014learning}等改良的RNN网络。这里着重介绍本文中用到的GRU结构。基本结构如图\ref{fig:gru}，GRU解决梯度消失主要是引入了一个更新门（update gate），该机制可用于控制在BP算法时，计算梯度的时候，通过更新门记住之前的信息，使得求导时不会陷入极小的情况，从而达到解决梯度消失问题。
+\begin{figure}[htpb]
+	\centering
+	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
+	\includegraphics[width=0.5 \textwidth,clip]{gru.png}
+	%\hspace{0.02\textwidth}
+	%\vspace*{-0.08cm}
+    \caption{}
+	\vspace*{-3.5mm}
+	\label{fig:gru}
+\end{figure}
+
+\begin{equation}\label{eq:rnn}
+    s_t = \mathbf{tanh}(\mathbf{W}_s*h_{t-1}+\mathbf{W}_x*x_{t}+b)
+\end{equation}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%  物体的检测与识别技术  %%%%%%%%%%%%%%%%%%%
 
 \subsection{物体检测与识别}
 
@@ -199,7 +226,7 @@ Zhang~等\cite{zhang2015learning}提出的模型认为从心理学的角度出�
 \end{equation}
 基于以上的工作，该模型同样认为人的面部属性对最终的关系预测可以起到关键的作用。
 
-Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会检测的任务提出了包含两个关系粒度的数据集，PISC-coarse和PISC-fine（2017）\cite{li2017dual-glance}。该工作首次提出了利用图片中的场景来协助预测两个人之间的关系，场景具体表示为该图片中的物体。直观来说，如果一幅图片中包含电脑桌子等物体，那么大概率是``同事''关系。\textbf{dual-glance}模型分为两个模块，first glance和second glance，first glance 的输入为一张图片$\mathbf{I}$ 和两个人身体的包围盒。针对图片$I$，首先修剪出3个小块，前两个小块分别覆盖住两个人，$p_1$和$p_2$，第三个小块覆盖两个人，表示为$p_{u}$。这三个小块的像素被修正为$224 \times 224$大小，作为后续三个CNNs 网络的输入，其中$p_1$和$p_2$的特征抽取网络是共享网络参数的。此外，包围盒的位置信息对于视觉信息是一种补充，例如亲密关系往往的离得比较近的，无关系的两个人对的包围盒离的较远。位置信息$\mathbf{g}$，经过预训练的ResNet\cite{he2016deep} 抽取得到表示人对关系的特征向量为$v$，经过拼接和全连接网络后得到这个人对的特征向量$v_{top}$。
+Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会检测的任务提出了包含两个关系粒度的数据集，PISC-coarse和PISC-fine（2017）\cite{li2017dual-glance}。该工作首次提出了利用图片中的场景来协助预测两个人之间的关系，场景具体表示为该图片中的物体。直观来说，如果一幅图片中包含电脑桌子等物体，那么大概率是``同事''关系。\textbf{dual-glance}模型分为两个模块，first glance和second glance，first glance 的输入为一张图片$\mathbf{I}$ 和两个人身体的包围盒。针对图片$I$，首先修剪出3个小块，前两个小块分别覆盖住两个人，$p_1$和$p_2$，第三个小块覆盖两个人，表示为$p_{u}$。这三个小块的像素被修正为$224 \times 224$大小，作为后续三个CNNs 网络的输入，其中$p_1$和$p_2$ 的特征抽取网络是共享网络参数的。此外，包围盒的位置信息对于视觉信息是一种补充，例如亲密关系往往的离得比较近的，无关系的两个人对的包围盒离的较远。位置信息$\mathbf{g}$，经过预训练的ResNet\cite{he2016deep} 抽取得到表示人对关系的特征向量为$v$，经过拼接和全连接网络后得到这个人对的特征向量$v_{top}$。
 
 对于second glance模块，模型利用faster-RCNN\cite{ren2015faster}中的RPN产生一系列的区域候选框$P_{I}$，这些候选框包含物体的概率大于超参数$m$。对于一个人对，我们从集合$P_{I}$ 中选择部分候选框$R(b1,b2;I)$，选择方式如\ref{eq:select-rp}，其中函数$G(b1,b2)$表示两个包围盒的IOU，$\tau_{u}$是阀值。
 \begin{equation}\label{eq:select-rp}
