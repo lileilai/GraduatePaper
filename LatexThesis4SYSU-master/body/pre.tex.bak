@@ -8,10 +8,7 @@
 \section{图像的视觉信息抽取}
 
 
-
-\subsection{神经网络}
-
-\subsubsection{一般神经网络}
+\subsection{一般神经网络}
 神经网络（neural network）的方面的研究就出现了，早起的神经网络主要是指生物学中的``生物神经网络''，在当前计算机领域特指``神经网络学习''。神经网络最基本的结构是神经元模型，神经元模型如图\ref{fig:nn-example}，在这个模型中包括输入端、神经元权重（weight）、偏差（bias）、激活函数（activation function）、阀值、输出。在这个模型中，当前神经元接收其它$n$个神经元的输入，与连接权重相乘之后加上偏差，然后激活函数的处理得到激活值输出。
 \begin{figure}[htpb]
 	\centering
@@ -73,7 +70,7 @@ $H_{\theta}(x) = f_3(w_{3}f_2(w_{2}(f_{1}(w_{1}x+b_1))+b_2)+b_3)$, 其中$f_{1},
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%   卷积神经网络的介绍   %%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{卷积神经网络的介绍}
+\subsection{卷积神经网络的介绍}
 卷积神经网络（Convolutional Neural Network,CNN）是深度学习的代表算法之一，由LeCun首次实现并且应用。卷积神经网络的主要作用是提取特征，该网络受到生物学的影响，相比较与全连接神经网络，卷积神经网络的主要特性包括局部感知和参数共享。局部感知指对于具有空间特征的输入来说，每个神经元没必要知道全局的信息，只需要感知局部的信息，然后在更高层将局部的信息合并起来得到更高层的信息。对于权值共享来说，每个卷积核与位置无关，因为假设对于图像来说，其中某一部分的统计特性和其它的部分是一样的，所以对于其中的一个卷积核来说，可以应用到图像上的任何地方去。所以，局部感知和参数共享不仅能提取到更多的特征，并且能大幅度减少参数的数量。因此，卷积神经网络广泛的应用在图像、视频、音频和文本等各种模态的数据上，并且都取得了巨大的成功。
 
 卷积神经网络的特征提取层主要包括两个模块，分别是卷积层（convolutional layer）和池化层（pooling layer），两者的顺序，一般是先通过卷积层，然后是池化层。对于卷积层，主要的作用是提取特征，卷积层的核心是卷积核（kernel），其本质还是神经元。但是卷积核的感受野和全连接的神经元是不同的，这里的感受野是局部的，并且感受野的大小由卷积核的大小控制。如图\ref{fig:con-example}所示，当前卷积核的大小是$4 \times 4$的，对于输入的图片$6 \times 6 \times 3$，其中图片输入的3为图片的通道数、$6 \times 6$为高宽，假设滑动的步骤为$1$，卷积核通过在输入图片上按照步长进行滑动并且进行对应位置的点乘运算，最后形成一个$4 \times 4$ 的特征图。以上综合起来就是卷积操作，其中$3 \times 3$就是网络的参数。按照惯例，输入的图片可以有固定的的高宽和通道数时，卷积核可以有不同的高宽，但是必须是固定的通道数，这里一般和输入的通道数一致。有多少个卷积核，最后就能得到多少个特征图（feature map）。
@@ -133,11 +130,11 @@ ResNet\cite{he2016deep}是何凯明等人(2016)提出的，针对前面网络并
 图推理是消息传递的一种形式，条件随机场（Conditional Random Field）广泛的用在了图推理问题上。Johnson\cite{johnson2015image}将CRF用于图像检索领域的场景图谱与对应图片的绑定的推断。本文用的方法类似于CRFasRNN\cite{zheng2015conditional}和Graph-LSTM\cite{liang2016semantic}。本文的方法是收到\cite{xu2017scene}的启发，Xu在场景图谱的生成任务中，设计了原始图和对偶图，原始图用于图片中物体节点的预测，对偶图用于关系节点的预测。和之前不同的是，我们只是对其中的关系节点构建图，通过关系的消息传播机制，我们的模型是迭代的提纯社会关系理解的预测。而不是像标准的循环神经网络（Recurrent Neural Network）只是单次预测，并不能达到提纯的效果。下面的部分我们介绍关于CRF和本文中用到了循环神经网络（RNN）以及门控循环网络（Gated Recurrent Unit,GRU）。
 
 \subsubsection{条件随机场}
-CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\texbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\texbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
+CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\textbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\textbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
 \textbf{X}的条件下\textbf{Y}的条件概率分布。令G = (V,E)表示一个无向图，V是节点的集合，E是无向边，$Y_{v}$表示与节点v对应的标记向量，$w~v$表示在图中所有与节点v有边连接的所有节点w，
 $w \neq v$表示节点v以外的所有节点，如果所有的节点$Y_v$都满足公式\ref{eq-crf}  的马尔科夫性质，那么称(Y,X)为一个条件随机场。
 \begin{equation} \label{eq-crf}
-    P(Y_{v}|X,Y_w,w \neq v) = P(Y_v|X,Y_w,w~v)
+    P(~Y_{v}~|~X,Y_w,w \neq v~) = P(~Y_v~|~X,Y_w,w~v~)
 \end{equation}
 CRF引入了特征函数（指数函数的形式）,对于其中的特例线性链条件随机场，线性链条件随机场如图\ref{fig:crf}。
 \begin{figure}[htpb]
@@ -150,14 +147,14 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 	\vspace*{-3.5mm}
 	\label{fig:crf}
 \end{figure}
-其中概率分布如下所示，其中t_{k}和s_{l}都是特征函数，$\lambda_{k}$和$\mu_{l}$对应的权值。
+其中概率分布如下所示，其中$t_{k}$和$s_{l}$都是特征函数，$\lambda_{k}$和$\mu_{l}$对应的权值。
 \begin{equation}
-    P(y|x) = \frac{1}{Z}\mathbf{exp}((\sum_{i,k})\lambda_{k}t_{k}(y_{i-1},y_{i},x,i)+\sum_{i,l}\mu_{l}s_{l}(y_{i},x,i))
+    P(y~|~x) = \frac{1}{Z}\mathbf{exp}((\sum_{i,k})\lambda_{k}t_{k}(y_{i-1},y_{i},x,i)+\sum_{i,l}\mu_{l}s_{l}(y_{i},x,i))
 \end{equation}
 
 \subsubsection{循环神经网路}
 
-循环神经网络（RNN）是神经网络的一种，主要用于处理序列序列建模问题。其基本结构如图\ref{fig:rnn}所示，相比其他类型的网络，其就是对神经网络展开k个步骤，所有的输入共享一个网络模块\textbf{S}。假设其中的参数为$\mathbf{W}_s$和$\mathbf{W}_x$，那么所有模块的这个两个参数是共享的。
+循环神经网络（RNN）是神经网络的一种，主要用于处理序列序列建模问题。其基本结构如图\ref{fig:rnn}所示，相比其他类型的网络，其就是对神经网络展开k个步骤，所有的输入共享一个网络模块\textbf{S}。假设其中的参数为$\mathbf{W}_s$和$\mathbf{W}_x$，那么所有模块的这个两个参数是共享的。对于标准的RNN结构，第t步，RNN的输出向量$\mathbf{s}_t$如公式\ref{eq:rnn}所示计算。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -168,9 +165,26 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 	\vspace*{-3.5mm}
 	\label{fig:rnn}
 \end{figure}
+由于标准的RNN网络会由于结构的问题，无法处理梯度消失和梯度爆炸的问题。后续的研究人员对于其提出的梯度消失的问题，有LSTM\cite{hochreiter1997long}和GRU\cite{cho2014learning}等改良的RNN网络。这里着重介绍本文中用到的GRU结构。基本结构如图\ref{fig:gru}，GRU解决梯度消失主要是引入了一个更新门（update gate），该机制可用于控制在BP算法时，计算梯度的时候，通过更新门记住之前的信息，使得求导时不会陷入极小的情况，从而达到解决梯度消失问题。
+\begin{figure}[htpb]
+	\centering
+	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
+	\includegraphics[width=0.5 \textwidth,clip]{gru.png}
+	%\hspace{0.02\textwidth}
+	%\vspace*{-0.08cm}
+    \caption{}
+	\vspace*{-3.5mm}
+	\label{fig:gru}
+\end{figure}
+
+\begin{equation}\label{eq:rnn}
+    s_t = \mathbf{tanh}(\mathbf{W}_s*h_{t-1}+\mathbf{W}_x*x_{t}+b)
+\end{equation}
 
 
-\subsection{物体检测与识别}
+%%%%%%%%%%%%%%%%%%%%%%%  物体的检测与识别技术  %%%%%%%%%%%%%%%%%%%
+
+\section{物体检测与识别}
 
 在社会关系识别的任务中，有一个重要的模块是利用物体识别模型得到人的场景信息，即采用物体识别模型识别去当前图片中包含了哪些物体，得到该物体在图片的区域。物体识别的模型包括Ross等人提出的RCNN\cite{girshick2014rich}，fast-RCNN\cite{girshick2015fast}，以及Ren等人（2016）\cite{ren2015faster}提出的faster-RCNN。前面提到的三个模型都是基于区域的物体检测模型，RCNN\cite{girshick2014rich} 首次提出在目标图像中有多个目标框，然后判断目标框是否包含物体，具体的检测步骤如下：
 （1）其中采用选择性搜索的方法得到图片中的所需要的目标框区域，将得到的区域调整为卷积神经网络输入的消息。
@@ -244,7 +258,13 @@ Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会�
     \end{split}
 \end{equation}
 
-\subsubsection{}
+\section{本章小结}
+
+首先，本章节首先
+
+然后，
+
+最后，
 
 
 
