@@ -61,7 +61,7 @@
 %%%%%%%  注意力机制  %%%%%%%%%%%%
 
 
-\subsection{周边物体信息微调模块}
+\subsection{物体信息微调模块}
 
 %%%%%%%%%%%%%% 之后写  %%%%%%%%%%% 先空着
 本文在模型\ref{fig:model-pprn}的基础上，本文实现了类似\textbf{dual-glance}的方法结合周边物体的信息，如图\ref{fig:model-atten}。当前模块主要包括两个步骤，利用faster-rcnn中的RPN(region proposal network)生成物体置信度高的区域，其次利用注意力机制得到关于周边物体区域的得分。
@@ -82,9 +82,10 @@
 \begin{enumerate}
     \item 对于，vgg 特征提取模块得到$d$张特征图，相当于每个点都是d-dimensions。
     \item 对于$d$张特征图，首先经过$3 \times 3$的卷积核的处理，用于结合周边的空间信息，同时每个点对应的d-dimension不变。
-    \item 假设在$d$张特征图中每个点上有k个锚点，每个锚点分为前景和后景，所以在前后景分类中，d-dimension的特征向量转化为一个2k的得分向量，而每个锚点都有四个坐标的偏移量，对于检测框回归模块，特征向量转化为4k的得分向量。其实RPN就是在和原图相同的尺寸上，设置密密麻麻的候选锚点。然后用cnn网络来判断哪些是包含物体目标的前景，那些是不包含物体目标的后景。
-    \item 全部锚点框都拿去训练太多了，因此会在锚点框中随机选取128个positive的锚点框和128个negative锚点框用于训练
+    \item 假设在$d$张特征图中每个点上有k个锚点，每个锚点分为前景和后景，所以在前后景分类中，d-dimension的特征向量转化为一个2k的得分向量，而每个锚点都有四个偏移量，对于检测框回归模块，特征向量转化为4k的得分向量。
+    \item 
 \end{enumerate}
+
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -95,30 +96,6 @@
 	\vspace*{-3.5mm}
 	\label{fig:rpn}
 \end{figure}
-上文提到的锚点框，其示意图如图\ref{}其实就是对于特征图的每个点生成一组检测框，检测框的尺寸由输入的图片的尺寸决定的，在本文中，对于每个检测点生成3种尺寸，每种尺寸3种形状的锚点框。这也是常见的多尺度方法，这9 个初始的锚点框的准确度有RPN的区域回归模块处理。对于生成的检测框，因为尺度是原图的尺度大小，需要映射为特征图的尺度大小，Roi pooling层划分出非均匀的网格，对网格采用最大池化然后得到锚点框的特征向量。
-\begin{figure}[htpb]
-	\centering
-	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
-	\includegraphics[width=0.80 \textwidth,clip]{anchor.png}
-	%\hspace{0.02\textwidth}
-	%\vspace*{-0.08cm}
-    \caption{anchor示意图}
-	\vspace*{-3.5mm}
-	\label{fig:anchor}
-\end{figure}
-
-利用前文提到的RPN网络，对于图片$\bm{I}$，生成是前景的检测框，并且过滤掉IOU（Intersection-over-Union）低于超参数$\tau_{u}$的检测框，得到一组检测框$\bm{P}_{I}$，采用预训练的vgg来得到特征图$conv(I)$，对这里的每个检测框，经过一层Roi pooling 层得到固定长度的物体区域特征$\bm{v}$，对于图片所有的检测框，从$conv(I)$生成$\{\bm{v_{i}|i=1,2,~....,~N}\}$特征向量，对于关系来说，和它关联的物体是比重是不同的，例如对于关系``家庭''，``碗''的权重比``桌子''的权重大的多，所以我们期望对于不同的物体区域引入不同的权重系数。因此，在当前模块中，同样引入注意力机制（attention mechanism），结合了关系的特征编码$v_{top}$和物体特征编码$v_{i}$共同决定权重系数的值：
-\begin{equation}
-    \mu_{i} = \bm{u}^\mathbm{T}\mathbm{tanh}(\mathbm{W}_{r}v_{top}+\mathbm{W}_{o}v_{i})
-\end{equation}
-\begin{equation}
-    \mathbm{a}_{i} = softmax(\mu_[i]) = \frac{exp(\mu_{i})}{\sum_{j}^{N}exp(\mu_{j})}
-\end{equation}
-根据关系得到每个物体区域特征的权重后，各个区域权重分别与区域特征编码相乘，如公式\ref{eq:model-obj-wei}所示：
-\begin{equation} \label{eq:model-obj-wei}
-    v^{att} = \sum_{i}\mu_{i}v_[i]
-\end{equation}
-最终用于分类的的编码由是将消息传播模块得到的关系
 
 \subsection{优化和实现细节}
 
