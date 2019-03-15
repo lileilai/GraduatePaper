@@ -66,7 +66,7 @@
 %%%%%%%%%%%%%% 之后写  %%%%%%%%%%% 先空着
 本文在模型\ref{fig:model-pprn}的基础上，本文实现了类似\textbf{dual-glance}的方法结合周边物体的信息，如图\ref{fig:model-atten}。当前模块主要包括两个步骤，利用faster-rcnn中的RPN(region proposal network)生成物体置信度高的区域，其次利用注意力机制得到关于周边物体区域的得分。
 
-在衣服图片中，往往会存在一些日常见到的物体，例如桌子、电脑、杯子，如果在一张图片中检测到了被杯子、桌子或者床等物体，那么当前的社会关系往往是``家庭''。因此本文在利用关系上下文的基础上，尝试进一步加入这部分信息来提升效果。
+在一张图片中，往往会存在一些日常见到的物体，例如桌子、电脑、杯子，如果在一张图片中检测到了被杯子、桌子或者床等物体，那么当前的社会关系往往是``家庭''。因此本文在利用关系上下文的基础上，进一步加入周边物体信息来提升效果。但是在PISC和PIPA-relation数据集中，不包含物体包围盒的标注以及物体类别的标注，这里采用的方法是利用在大规模训练集上，例如COCO\cite{lin2014microsoft}预训练好faster-rcnn模型，利用其中的区域生成网络。区域生成网络的输入可以是任何大小的图片，输出是一些长方形的检测框，其中每个检测框都带有是否包含物体的得分。由于期望RPN和fast-rcnn共享有vgg\cite{simonyan2015very}（本文采用vgg，也可采用其他的预训练模型）生成的特征图，这里的vgg 网络有13个可训练的卷积层。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -77,6 +77,8 @@
 	\vspace*{-3.5mm}
 	\label{fig:model-atten}
 \end{figure}
+
+经典的方法生成检测框都非常耗费时间，例如RCNN和fasr-rcnn采用的选择性搜索，而faster-rcnn抛弃传统的方法，直接从特征图生成检测框，能极大的提升检测的速度。
 
 
 \subsection{优化和实现细节}
