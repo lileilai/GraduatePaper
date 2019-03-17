@@ -1,0 +1,29 @@
+% !Mode:: "TeX:UTF-8"
+
+\chapter{实验设计与分析}
+\label{ch:exp}
+
+本章将利用常见的社会关系理解的数据集对上一章提到的PPRN模型进行检测任务的验证，具体来说即对图片中两个标定的坐标人的关系类别。本章首先介绍当前所用到的两个数据集训练/验证/测试的数据分布情况，数据集的特点。再介绍若干对比模型，介绍实验的参数设置，然后分别对实验结果进行说明和分析，并且对其中消息池化进行了不同实现方法的对比。最后通过案例研究的方法来分析PPRN模型在关系补全任务中发挥的效果。
+
+\section{数据集}
+
+现有的大规模社会关系理解的数据集主要有两个：分别是PIPA-relation\cite{sun2017a}数据集和PISC\cite{li2017dual-glance}数据集，下面简单介绍这两个数据集。
+
+PISC数据集全称是\textbf{People in social Context}，它是Sun等人在2017年通过人工标注平台得到的数据集，这些图片主要来自Visual Genome\cite{krishna2017visual}、COCO\cite{lin2014microsoft}、YFCC100M\cite{thomee2016yfcc100m}、instagram和twitter等社交网站，Google和Bing商业搜索引擎。从这数据额的来源可以保证数据集的图片是足够高的方差的，人的面部表情，以及场景类型。PISC数据集包含22670张图片以及对应的社会关系标注，在PISC数据集上，又包含两个粒度的识别任务，coarse-level和fine-level。PIPA-relation数据集的全称是People in Photo Album Relation，总共包括37107张图片。
+数据集的情况如表\ref{tab:exp-pisc-statistic}，``Train''表示训练集图片的数量，``Valid''和``Test''分别表示验证和测试集的图片数量。``#train''表示训练集人对的数量，``#valid''和``#test''分别表示验证和测试集的人对数量。
+\begin{table}[htpb]
+  \centering
+  \caption{PISC、PIPA-relation数据集的统计列表}
+  \label{tab:exp-pisc-statistic}
+  \begin{tabular}{c|c|c|c|c|c|c}
+    \toprule
+    数据集 & Train & Valid & Test & #train  &  #valid &  #test  \\
+    \midrule
+    PISC-coarse & 13142 & 4000 & 4000 & 14536 & 25636 & 15497   \\
+    \midrule
+    PISC-fine &  16828 & 500 & 1250 & 55400 & 1505 & 3691 \\
+    \midrule
+    PIPA-relation & 5857 & 261 & 2452 & 13729 & 709 & 5106 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
