@@ -80,9 +80,62 @@ colleagues''或``presenter audience''。
 
 \section{实验设置}
 
-在预训练模型，包括ResNet-101和Vgg-16最后一层的维度都是是4096，在消息传递和池化模块的中的编码长度
+在预训练模型，包括ResNet-101和Vgg-16最后一层的维度都是是4096，经过全连接层，在消息传递和池化模块的中的编码长度为512。结合周边物体信息模块中注意力机制的attention\_size=30，在微调ResNet-101和Vgg-16，卷积层学习率设置为$1 \times 10^{-4}$，新增的分类层学习率为$1 \times 10^{-3}$。训练时，学习率设置为$1 \times 10^{-4}$，权重衰减为$5 \times 10^{-4}$。消息传递和池化模块的迭代数$T=4$。 并且微调时的优化方法是SGD，训练迭代模块的优化方法是Adam。
+
+\subsection{PISC数据集对比}
+在实验中，本文主要与以下几个模型进行对照：
+\begin{itemize}
+    \item \textbf{UnionCNN}学习Lu等人\cite{lu2016visual}利用一个CNN网络来预测关系方法，同样利用一个CNN网络来提取人对的联合区域的特征来进行分类任务。
+    \item \textbf{Pair CNN}\cite{li2017dual-glance}由两个共享参数的CNNs提取两个修剪出来的图像特征进行分类。
+    \item \textbf{Pair CNN + BBox + Union}\cite{li2017dual-glance}在前面两个特征提取模块的基础上，进一步结合两个个体包围盒的位置信息。
+    \item \textbf{Dual-glance}\cite{li2017dual-glance}实现两个粒度的分类任务，分别是PISC-coarse和PISC-fine，分别包含三种和6中类别的关系。Dual-glance利用了PairCNN+BBox+Union，以及物体区域的特征来提存预测结果。
+    \item GRM\cite{wang2018deep}提出了一个图推理模型来促进社会关系理解，该模型集成物体和社会关系共现概率的先验知识，GRM采用的是人对特征和上下文物体特征之间的消息传递。
+\end{itemize}
+
+类似于GRM模型，我们采用的是每个类别的召回率和mAP（mean average precision）。mAP常作为物体检测的衡量标准，它是不同召回值的下最大精度的平均值。举例如下，假设当前图片有五个苹果，首先对物体检测模型所有检测框分类的类别为苹果按得分从大到小排序。依次计算准确率和召回率，这里的准确率指的是TP和FP。假如总共有10个检测框被识别为苹果，其计算结果如表格\ref{tab:exp:map}所示，例如其中的对于排名第三的降本，$\textbf{Precision} = 2/3 = 0.67$，$\textbf{Recall} = 2/5 = 0.4$。
+\begin{table}[htpb]
+  \centering
+  \caption{PISC、PIPA-relation数据集的统计列表}
+  \label{tab:exp-map}
+  \begin{tabular}{c|c|c|c|c|c|c|c}
+    \toprule
+    \textbf{得分排名} & \textbf{是否正确} & \textbf{Precision} & \textbf{Recall}  & \textbf{得分排名} & \textbf{是否正确} & \textbf{Precision} & \textbf{Recall}   \\
+    \midrule
+    1 & True & 1.0 & 0.2  & 6 & True & 0.5 & 0.6    \\
+    \midrule
+    2 &  True & 1.0 & 0.4  & 7 & True & 0.57 & 0.8  \\
+    \midrule
+    3 & False & 0.67 & 0.4  & 8 & False & 0.5 & 0.8  \\
+    \midrule
+    4 & False & 0.5 & 0.4   & 9 & False & 0.44 & 0.8 \\
+    \midrule
+    5 & False & 0.4 & 0.4  & 10 & True & 0.5 & 1.0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+根据数据，以Recall为横坐标，Precision为纵坐标，可以画出如图\ref{fig:exp-map}所示的曲线c。将recall值划分为11个值，我们将$Recall \geq \widetilde{r}$的Precision替换为最大的，由此可得到曲线c。计算方法如公式
+\ref{eq:exp-map}所示。我们给定的数据，对于苹果这一类别的AP = $(5 \times 1.0 + 4 \times 0.57 + 2 \times 0.5)/11$
+\begin{figure}[htpb]
+	\centering
+	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
+	\includegraphics[width=0.75 \textwidth,clip]{map.png}
+	%\hspace{0.02\textwidth}
+	%\vspace*{-0.08cm}
+    \caption{mAP计算示例图}
+	\vspace*{-3.5mm}
+	\label{fig:exp-map}
+\end{figure}
+\begin{equation} \label{eq:exp-map}
+\begin{split}
+    AP &= \frac{1}{11}\sum_{r \in \{0.0,0.1....,1.0\}}P_{interp}(r) \\
+    P_{intern}(r) &= max_{\widetilde{r} \geq r}p(\widetilde(r))
+\end{split}
+\end{equation}
+
+\subsection{PIPA-relation数据集对比}
 
 
-\section{实验对比}
+
+\section{实验分析}
 
 
