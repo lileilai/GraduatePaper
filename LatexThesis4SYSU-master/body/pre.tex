@@ -29,7 +29,7 @@
     \end{aligned}
     \right.
 \end{equation}
-例如sigmoid函数可以把$（-\infty,+\infty）$输入值映射到(0,1)区间内。常见的激活函数还有tanh(hyperbolic tangent, tanh)函数、修正线性单元(rectified linear units,ReLU)函数等等。表\ref{tab:activate-func}详细的列出了3个常用激活函数的原函数、一阶导数、以及函数的值域。其中tanh函数只是sigmoid函数向下平移再拉升的结果。并且在实际应用中，tanh的效果是好于sigmoid，因为tanh的函数值域是属于(-1,1)的，使用tanh代替sigmoid，会使得神经元输出的均值趋近于0而不是0.5，这样的结果会使得下一层的学习变得更加简单。但是对于多层的神经网络，sigmoid和tanh在极大或极小时梯度会趋近于0，会造成梯度弥散问题。但是对于ReLU 来说，当小于0时，梯度是小于0的，当大于0是，梯度是常数。ReLU激活函数在实际训练中取得了良好的效果。但是对于小于0的部分，此时的梯度为0，神经元不会训练，因此研究者们提出了LeakyReLU等激活函数解决这一问题。
+例如sigmoid函数可以把$（-\infty,+\infty）$输入值映射到(0,1)区间内。常见的激活函数还有tanh(hyperbolic tangent, tanh)函数、修正线性单元(rectified linear units,ReLU)函数等等。表\ref{tab:activate-func}详细的列出了3 个常用激活函数的原函数、一阶导数、以及函数的值域。其中tanh函数只是sigmoid函数向下平移再拉升的结果。并且在实际应用中，tanh的效果是好于sigmoid，因为tanh的函数值域是属于(-1,1)的，使用tanh代替sigmoid，会使得神经元输出的均值趋近于0而不是0.5，这样的结果会使得下一层的学习变得更加简单。但是对于多层的神经网络，sigmoid和tanh在极大或极小时梯度会趋近于0，会造成梯度弥散问题。但是对于ReLU 来说，当小于0时，梯度是小于0的，当大于0是，梯度是常数。ReLU激活函数在实际训练中取得了良好的效果。但是对于小于0的部分，此时的梯度为0，神经元不会训练，因此研究者们提出了LeakyReLU等激活函数解决这一问题。
 \begin{table}[htpb]
   \centering
   \caption{常见激活函数的介绍}
@@ -46,17 +46,10 @@
 \end{table}
 
 前面介绍了神经元模型和各类激活函数，这里需要提到是深度神经网络、目标函数、优化方法。相比前面的单层神经网络，更常见的如图\ref{fig:mnn-example}所示的包含多个层级结构的神经网络，又称为``多层前馈神经网络''（multi-layer feed forward neural networks），其中神经元同一层之间不存在连接，跨层的神经元之间也不存在连接。就如图\ref{fig:mnn-example}所示，其中输入层的神经元接收外接的输入，隐层与输出层的神经元对输入的数据进行处理，这里的网络包含两个隐藏层（hidden layer）和一个输出层（output layer），假设输入为$x$，那么该网络可以形似化为
-$H_{\theta}(x) = f_3(w_{3}f_2(w_{2}(f_{1}(w_{1}x+b_1))+b_2)+b_3)$, 其中$f_{1},f_{2}$分别是隐藏层的激活函数，$f_{3}$是输出层的激活函数。假设对于当前任务的目标函数（object function）如\ref{eq:loss-1}，需要最小化目标函数$L_{\mathbf{X},\mathbf{Y}}$的值， 对于训练的过程来说，就是不断接受输入层的$（x,y）$，$y$是样本的标签，随着$x$的不断输入，不断调整网络的连接权重$w_1,w_2,w_3$。 常用的优化算法包括随机梯度下降法（stochastic gradient descent，SGD）来迭代优化连接权重，对于一条样本$x_{i},y_{i}$，其连接权重的更新方法如。
-\begin{equation}
-    \begin{split}
-        w_i  \leftarrow w_i +\bigtriangleup w
-    \end{split}
-\end{equation}
-不同层之间的梯度通过误差逆传递（error Back Propagation 简称BP）\cite{rumelhart1988learning}算法进行整个网络的学习。SGD因为更新比较频繁会造成损失函数动荡，最终停留在局部最小值或鞍点。之后又新衍生出的包括Monmentum、Adagrad\cite{duchi2011adaptive}和Adam\cite{kingma2014adam}，这些算法能减少迭代的轮数，训练速度更快的收敛到最优值。
+$H_{\theta}(x) = f_3(w_{3}f_2(w_{2}(f_{1}(w_{1}x+b_1))+b_2)+b_3)$, 其中$f_{1},f_{2}$分别是隐藏层的激活函数，$f_{3}$是输出层的激活函数。假设对于当前任务的目标函数（object function）如\ref{eq:loss-1}，需要最小化目标函数$L_{(\mathbf{X},\mathbf{Y})}$的值， 对于训练的过程来说，就是不断接受输入层的$（x,y）$，$y$是样本的标签，随着$x$的不断输入，不断调整网络的连接权重$w_1,w_2,w_3$。 常用的优化算法包括随机梯度下降法（stochastic gradient descent，SGD）来迭代优化连接权重，对于一条样本$x_{i},y_{i}$，其连接权重的更新方法如。
 \begin{equation}\label{eq:loss-1}
     L(\mathbf{X},\mathbf{Y}) = \sum_{(x_i,y_i) \in (\mathbf{X},\mathbf{Y})}(y_{i} - H_{x}(x_{i}))
 \end{equation}
-
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -67,7 +60,35 @@ $H_{\theta}(x) = f_3(w_{3}f_2(w_{2}(f_{1}(w_{1}x+b_1))+b_2)+b_3)$, 其中$f_{1},
 	\vspace*{-3.5mm}
 	\label{fig:mnn-example}
 \end{figure}
-
+不同层之间的梯度通过误差逆传递（error Back Propagation 简称BP）\cite{rumelhart1988learning}算法进行整个网络的学习。SGD因为更新比较频繁会造成损失函数动荡，最终停留在局部最小值或鞍点。之后又新衍生出的包括Monmentum、Adagrad\cite{duchi2011adaptive}和Adam\cite{kingma2014adam}，这些算法能减少迭代的轮数，训练速度更快的收敛到最优值。
+SGD的梯度更新方法如公式\label{eq:sgd}所示，找出参数的梯度，然后往梯度的方法去更新参数。
+\begin{equation} \label{eq:sgd}
+    \begin{split}
+        W_{t+1}  \leftarrow W_{t} - \alpha \bigtriangleup g_{t}
+    \end{split}
+\end{equation}
+对于SGD with Monmentum来说，在梯度下降的过程中加入了惯性，使得梯度方向不变的维度上速度加快，梯度方向有改变的维度上速度减慢。其更新公式如\ref{eq:momentum}，$\beta_{1}$经验值为0.9，$g_t$为在t时刻的梯度。这样便可以加快收敛减少震荡。
+\begin{equation}\label{eq:momentum}
+    \begin{split}
+        m_{t} = \beta_{1}m_{t-1} + (1-\beta_{1})g_{t} \\
+        W_{t+1}  \leftarrow W_{t} - \alpha m_{t}
+    \end{split}
+\end{equation}
+对于Adagrad来说，其梯度更新规则为公式\ref{eq:adagrad}。对于优化器来说，学习率$\alpha$非常重要，太小会花费太多时间学习，太大容易过拟合，无法正确学习。Adagrad便是根据梯度来动态的调整学习率，Ada即Adaptive的意思。前期梯度较大的时候能够约束学习率，梯度比较小的时候能够方法学习率。
+\begin{equation} \label{eq:adagrad}
+    \begin{split}
+        m_{t} = \sum_{\tau=1}^{t}g_{\tau}^{2} \\
+        W_{t+1}  \leftarrow W_{t} - \alpha \frac{1}{\sqrt{m_{t}+\epsilon}} g_{t}
+    \end{split}
+\end{equation}
+而Adam可以说是前面Monmentum和Adagrad的结合，如公式\ref{eq:adam}所示，Adam既保留了Momentum对梯度方向的调整策略，同时也加上了对过去梯度的平方值做学习率的调整。
+\begin{equation} \label{eq:adam}
+    \begin{split}
+        m_{t} = \beta_{1}m_{t-1} + (1 - \beta_{1})g_{t} \\
+        v_{t} = \beta_{2}v_{t-1} + (1 - \beta_{2})g_{t}^{2} \\
+        W_{t+1}  \leftarrow W_{t} - \alpha \frac{1}{\sqrt{v_{t}}+\epsilon}m_{t}
+    \end{split}
+\end{equation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%   卷积神经网络的介绍   %%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{卷积神经网络的介绍}
