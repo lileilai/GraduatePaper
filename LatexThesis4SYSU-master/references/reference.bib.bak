@@ -354,17 +354,6 @@ year={2018}}
   year={2018}
 }
 
-@article{xia2012understanding,
-  title={Understanding kin relationships in a photo},
-  author={Xia, Siyu and Shao, Ming and Luo, Jiebo and Fu, Yun},
-  journal={IEEE Transactions on Multimedia},
-  volume={14},
-  number={4},
-  pages={1046--1056},
-  year={2012},
-  publisher={IEEE}
-}
-
 @inproceedings{chen2012discovering,
   title={Discovering informative social subgraphs and predicting pairwise relationships from group photos},
   author={Chen, Yan-Ying and Hsu, Winston H and Liao, Hong-Yuan Mark},
@@ -450,3 +439,103 @@ title={Using audio and video features to classify the most dominant person in a 
 author={Hung, Hayley and Jayagopi, Dinesh Babu and Yeo, Chuohao and Friedland, Gerald and Ba, Sileye O and Odobez, Jeanmarc and Ramchandran, Kannan and Mirghafori, Nikki and Gaticaperez, Daniel},
 pages={835--838},
 year={2007}}
+
+@inproceedings{rienks2006detection,
+  title={Detection and application of influence rankings in small group meetings},
+  author={Rienks, Rutger and Zhang, Dong and Gatica-Perez, Daniel and Post, Wilfried},
+  booktitle={Proceedings of the 8th international conference on Multimodal interfaces},
+  pages={257--264},
+  year={2006},
+  organization={ACM}
+}
+
+@article{salamin2009automatic,
+  title={Automatic role recognition in multiparty recordings: Using social affiliation networks for feature extraction},
+  author={Salamin, Hugues and Favre, Sarah and Vinciarelli, Alessandro},
+  journal={IEEE Transactions on Multimedia},
+  volume={11},
+  number={7},
+  pages={1373--1380},
+  year={2009},
+  publisher={IEEE}
+}
+
+@inproceedings{wang2010seeing,
+  title={Seeing people in social context: Recognizing people and social relationships},
+  author={Wang, Gang and Gallagher, Andrew and Luo, Jiebo and Forsyth, David},
+  booktitle={European conference on computer vision},
+  pages={169--182},
+  year={2010},
+  organization={Springer}
+}
+
+@inproceedings{dibeklioglu2013like,
+  title={Like father, like son: Facial expression dynamics for kinship verification},
+  author={Dibeklioglu, Hamdi and Ali Salah, Albert and Gevers, Theo},
+  booktitle={Proceedings of the IEEE International Conference on Computer Vision},
+  pages={1497--1504},
+  year={2013}
+}
+
+@inproceedings{fang2010towards,
+  title={Towards computational models of kinship verification},
+  author={Fang, Ruogu and Tang, Kevin D and Snavely, Noah and Chen, Tsuhan},
+  booktitle={2010 IEEE International conference on image processing},
+  pages={1577--1580},
+  year={2010},
+  organization={IEEE}
+}
+
+@article{xia2012understanding,
+  title={Understanding kin relationships in a photo},
+  author={Xia, Siyu and Shao, Ming and Luo, Jiebo and Fu, Yun},
+  journal={IEEE Transactions on Multimedia},
+  volume={14},
+  number={4},
+  pages={1046--1056},
+  year={2012},
+  publisher={IEEE}
+}
+
+@inproceedings{chen2012discovering,
+  title={Discovering informative social subgraphs and predicting pairwise relationships from group photos},
+  author={Chen, Yan-Ying and Hsu, Winston H and Liao, Hong-Yuan Mark},
+  booktitle={Proceedings of the 20th ACM international conference on Multimedia},
+  pages={669--678},
+  year={2012},
+  organization={ACM}
+}
+
+@inproceedings{guo2014graph,
+  title={Graph-based kinship recognition},
+  author={Guo, Yuanhao and Dibeklioglu, Hamdi and Van der Maaten, Laurens},
+  booktitle={2014 22nd international conference on pattern recognition},
+  pages={4287--4292},
+  year={2014},
+  organization={IEEE}
+}
+
+@inproceedings{zhang2015learning,
+  title={Learning social relation traits from face images},
+  author={Zhang, Zhanpeng and Luo, Ping and Loy, Chen-Change and Tang, Xiaoou},
+  booktitle={Proceedings of the IEEE International Conference on Computer Vision},
+  pages={3631--3639},
+  year={2015}
+}
+
+@incollection{ding2014learning,
+  title={Learning social relations from videos: Features, models, and analytics},
+  author={Ding, Lei and Yilmaz, Alper},
+  booktitle={Human-Centered Social Media Analytics},
+  pages={21--41},
+  year={2014},
+  publisher={Springer}
+
+  @inproceedings{johnson2018image,
+  title={Image generation from scene graphs},
+  author={Johnson, Justin and Gupta, Agrim and Fei-Fei, Li},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={1219--1228},
+  year={2018}
+}
+}
