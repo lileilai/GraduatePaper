@@ -151,7 +151,7 @@ ResNet\cite{he2016deep}是何凯明等人(2016)提出的，针对前面网络并
 图推理是消息传递的一种形式，条件随机场（Conditional Random Field）广泛的用在了图推理问题上。Johnson\cite{johnson2015image}将CRF用于图像检索领域的场景图谱与对应图片的绑定的推断。本文用的方法类似于CRFasRNN\cite{zheng2015conditional}和Graph-LSTM\cite{liang2016semantic}。本文的方法是收到\cite{xu2017scene}的启发，Xu在场景图谱的生成任务中，设计了原始图和对偶图，原始图用于图片中物体节点的预测，对偶图用于关系节点的预测。和之前不同的是，我们只是对其中的关系节点构建图，通过关系的消息传递机制，我们的模型是迭代的提纯社会关系理解的预测。而不是像标准的循环神经网络（Recurrent Neural Network）只是单次预测，并不能达到提纯的效果。下面的部分我们介绍关于CRF和本文中用到了循环神经网络（RNN）以及门控循环网络（Gated Recurrent Unit,GRU）。
 
 \subsubsection{条件随机场}
-CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\textbf{X}的条件下，构建条件概率模型\textbf{P(Y\|X)}。条件随机场的定义如下：设\textbf{X}与\textbf{Y}是随机变量，\textbf{P(Y\|X)}是在给定
+CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\textbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\textbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
 \textbf{X}的条件下\textbf{Y}的条件概率分布。令G = (V,E)表示一个无向图，V是节点的集合，E是无向边，$Y_{v}$表示与节点v对应的标记向量，$w~v$表示在图中所有与节点v有边连接的所有节点w，
 $w \neq v$表示节点v以外的所有节点，如果所有的节点$Y_v$都满足公式\ref{eq-crf}  的马尔科夫性质，那么称(Y,X)为一个条件随机场。
 \begin{equation} \label{eq-crf}
@@ -279,6 +279,7 @@ Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会�
     \end{split}
 \end{equation}
 
+在本文写作期间，Zhang等人\cite{}
 综上所述，现有的工作均在例如只是提取人在图像上区域的特征进行分类的基准模型的基础上，进一步的引入了更多的信息，更多的约束。直观来看，单纯从两个人的图像区域信息直接推断出关系类别确实是很大的挑战，所以一种解决方案是如何引入上下文的信息来辅助判别，这也是本文工作的切入点。
 
 \section{本章小结}
