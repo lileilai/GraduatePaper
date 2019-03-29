@@ -3,15 +3,15 @@
 \chapter{实验设计与分析}
 \label{ch:exp}
 
-本章将利用常见的社会关系理解的数据集对上一章提到的PPRN模型进行检测任务的验证，具体来说即对图片中两个标定的坐标人的关系类别。本章首先介绍当前所用到的两个数据集训练/验证/测试的数据分布情况，数据集的特点。再介绍若干对比模型，介绍实验的参数设置，然后分别对实验结果进行说明和分析，并且对其中消息池化进行了不同实现方法的对比。最后通过案例研究的方法来分析PPRN模型在关系补全任务中发挥的效果。
+本章将利用社会关系理解的数据集对上一章提到的PPRN模型进行检测任务的验证，具体来说即识别出图片中两个标定坐标人的关系类别。本章首先介绍当前所用到的两个数据集训练/验证/测试的数据分布情况，数据集的特点。再介绍若干对比模型，介绍实验的参数设置，然后分别对实验结果进行说明和分析，并且对其中消息池化进行了不同实现方法的对比。最后通过案例研究的方法来分析PPRN模型在关系补全任务中发挥的效果。
 
 \section{数据集}
 
 \subsection{数据集简介}
 
-现有的大规模社会关系理解的数据集主要有两个：分别是PIPA-relation\cite{sun2017a}数据集和PISC\cite{li2017dual-glance}数据集，下面简单介绍这两个数据集。
+现有大规模社会关系理解的数据集主要有两个：分别是PIPA-relation\cite{sun2017a}数据集和PISC\cite{li2017dual-glance}数据集，下面简单介绍这两个数据集。
 
-PISC数据集全称是People in social Context，它是Sun等人在2017年通过人工标注平台得到的数据集，这些图片主要来自Visual Genome\cite{krishna2017visual}、COCO\cite{lin2014microsoft}、YFCC100M\cite{thomee2016yfcc100m}、instagram 和twitter等社交网站，Google和Bing商业搜索引擎。从这数据额的来源可以保证数据集的图片是足够高的方差的，人的面部表情，以及场景类型。PISC数据集包含22670张图片以及对应的社会关系标注，在PISC数据集上，又包含两个粒度的识别任务，coarse-level和fine-level。如图\ref{fig:exp-pisc-r}所示的划分方式，先是粗粒度的，再到细粒度的关系类别。
+PISC数据集全称是People in social Context，它是Sun等人\cite{sun2017a}在2017年通过人工标注平台得到的数据集，这些图片主要来自Visual Genome\cite{krishna2017visual}、COCO\cite{lin2014microsoft}、YFCC100M\cite{thomee2016yfcc100m:}、instagram 和twitter等社交网站、Google和Bing商业搜索引擎。数据的来源可以保证数据集的图片是足够高的方差，足够数量人的面部表情，以及场景类型。PISC数据集包含22670张图片以及对应的社会关系标注，在PISC数据集上，又包含两个粒度的识别任务，coarse-level和fine-level。如图\ref{fig:exp-pisc-r}所示的划分方式，先是粗粒度的，再到细粒度的关系类别。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -23,7 +23,7 @@ PISC数据集全称是People in social Context，它是Sun等人在2017年通过
 	\label{fig:exp-pisc-r}
 \end{figure}
 
-PIPA-relation数据集的全称是People in Photo Album Relation，总共包括37107张图片。同样是人工标注的数据集，基于社会关系理论\cite{bugental2000acquisition}划分的，Sun\cite{sun2017a}详细的给出了每个关系域的特征。然后所有的社会关系划分为5个关系域，在构建数据集的过程中，这5个关系域划分为16种社会关系，五个关系域分别是Attachment domain、Reciprocity domain、Mating domain、Hierarchical power domain和Coalitional groups domain。Attach domain划分为{\it father-child}，{\it mother-child}，{\it Grandpa-grandchild}和{\it grandma-grandchild}，Reciprocity domain划分为friends, siblings和classmates。Mating domain只包含单条关系lovers/spouses。Hierarchical power domain划分为presenter-audience, teacher-student, trainer-trainee and leader-subordinate。Coalitional groups domain划分为band members, dance team members, sport team members and colleagues。
+PIPA-relation数据集的全称是People in Photo Album Relation，总共包括37107张图片。同样是人工标注的数据集，基于社会关系理论\cite{bugental2000acquisition}划分的，Sun\cite{sun2017a}详细的给出了每个关系域的特征。然后所有的社会关系划分为5个关系域，在构建数据集的过程中，这5个关系域划分为16种社会关系，五个关系域分别是Attachment domain、Reciprocity domain、Mating domain、Hierarchical power domain和Coalitional groups domain。Attach domain划分为{\it father-child}，{\it mother-child}，{\it Grandpa-grandchild}和{\it grandma-grandchild}，Reciprocity domain划分为{\it friends}, {\it siblings}和{\it classmates}。Mating domain 只包含单条关系{\it lovers/spouses}。Hierarchical power domain划分为{\it presenter-audience}, {\it teacher-student}, {\it trainer-trainee} and {\it leader-subordinate}。Coalitional groups domain划分为{\it band members}, {\it dance team members}, {\it sport team members} and {\it colleagues} 。
 
 数据集的情况如表\ref{tab:exp-sta-one}，``Train''表示训练集图片的数量，``Valid''和``Test''分别表示验证和测试集的图片数量。``\#train''表示训练集人对的数量，``\#valid''和``\#test''分别表示验证和测试集的人对数量。
 \begin{table}[htpb]
@@ -46,8 +46,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 
 \subsection{数据集分析} \label{sec:exp-dataset-ana}
 
-对于数据集PISC-coarse、PISC-fine和PIPA-relation，本文做了基本的数据集分析，如表\ref{tab:exp-sta-two}，其中``Sui''表示一张图片有多个人对的比例，``Unsui''则表示一张图片只有一个人对的百分比。·``Single Rel''一张图片包含的关系类别只有一种，``Multi Rel''表示一张图片包含多种关系。从表统计数据可以得到两个结论，从``Sui''和``Unsui''来看，绝大多数的图片是包含多个人对的，从``Multi Rel''来看，一张图片的关系种类往往是相同的，因为直观来看，给定场景下的社会关系时稳定的。例如，假如张图片是一个会议的场景，那么其中往往会有多个人对，并且这些人对间的社会关系往往是``
-colleagues''或``presenter audience''。
+对于数据集PISC-coarse、PISC-fine和PIPA-relation，本文做了基本的数据集分析，如表\ref{tab:exp-sta-two}，其中``Sui''表示一张图片有多个人对的比例，``Unsui''则表示一张图片只有一个人对的百分比。``Single Rel''一张图片包含的关系类别只有一种，``Multi Rel''表示一张图片包含多种关系。从表统计数据可以得到两个结论，从``Sui''和``Unsui''来看，绝大多数的图片是包含多个人对的，从``Multi Rel''来看，一张图片的关系种类往往是相同的，因为直观来看，给定场景下的社会关系是稳定的。例如，假如张图片是一个会议的场景，那么其中往往会有多个人对，并且这些人对间的社会关系往往是{\it colleagues}或{\it presenter audience}。
 \begin{table}[htpb]
   \centering
   \caption{PISC、PIPA-relation分析表，单位为(\%)}
@@ -70,9 +69,27 @@ colleagues''或``presenter audience''。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
-	\includegraphics[width=0.65 \textwidth,clip]{ppp.png}
-	%\hspace{0.02\textwidth}
-	%\vspace*{-0.08cm}
+	\subfigure[pisc-coarse]{
+    	\includegraphics[width=0.30 \textwidth,clip]{PISC_coarse.png}
+    	%\hspace{0.02\textwidth}
+    	%\vspace*{-0.08cm}
+        %\caption{数据集的关系类别统计}
+    	\vspace*{-2.5mm}
+    }
+    \subfigure[pisc-fine]{
+    	\includegraphics[width=0.30 \textwidth,clip]{PISC_fine.png}
+    	%\hspace{0.02\textwidth}
+    	%\vspace*{-0.08cm}
+        %\caption{数据集的关系类别统计}
+    	\vspace*{-2.5mm}
+    }
+    \subfigure[pipa-relation]{
+    	\includegraphics[width=0.30 \textwidth,clip]{PIPA_fine.png}
+    	%\hspace{0.02\textwidth}
+    	%\vspace*{-0.08cm}
+        %\caption{数据集的关系类别统计}
+    	\vspace*{-2.5mm}
+    }
     \caption{数据集的关系类别统计}
 	\vspace*{-3.5mm}
 	\label{fig:exp-statistic}
@@ -81,7 +98,7 @@ colleagues''或``presenter audience''。
 \section{实验设置}
 
 \subsection{实验方法}
-类似于GRM模型，我们采用的是每个类别的召回率和mAP（mean average precision）。mAP常作为物体检测的衡量标准，它是不同召回值的下最大精度的平均值。举例如下，假设当前图片有五个苹果，首先对物体检测模型所有检测框分类的类别为苹果按得分从大到小排序。依次计算准确率和召回率，这里的准确率指的是TP和FP。 假如总共有10个检测框被识别为苹果，其计算结果如表格\ref{tab:exp:map}所示，例如其中的对于排名第三的降本，$\textbf{Precision} = 2/3 = 0.67$，$\textbf{Recall} = 2/5 = 0.4$。
+类似于GRM模型，我们采用的是每个类别的召回率和mAP（mean average precision）。mAP常作为物体检测的衡量标准，它是不同召回值的下最大精度的平均值。举例如下，假设当前图片有五个苹果，首先对物体检测模型所有检测框分类的类别为苹果按得分从大到小排序。依次计算准确率和召回率，这里的准确率指的是TP和FP。 假如总共有10个检测框被识别为苹果，其计算结果如表\ref{tab:exp-map}所示，例如其中的对于排名第三的降本，$\textbf{Precision} = 2/3 = 0.67$，$\textbf{Recall} = 2/5 = 0.4$。
 \begin{table}[htpb]
   \centering
   \caption{mAP计算示例数据}
@@ -257,6 +274,7 @@ colleagues''或``presenter audience''。
 
 直观来看，{\it Friend}和{\it Commercial}很难预测，并且这也符合所有的模型来说在fine-level的识别结果。以本文提出的PPRN-（obj region）为例，在fine-level的召回混淆矩阵如图\ref{fig:exp-confu-fine}所示，相比其他非亲密的关系，（{\it Friend}，{\it Couple}，{\it Family}）这三种关系之间更容易相互混淆，意味着他们有相似的特征。但是，非亲密的关系({\it Professional}，{\it Commercial})互相之间不存在容易混淆的情况。同理，如图
 \ref{fig:exp-confu-coarse}所示，为coarse-level的混淆矩阵，{\it Intimate}容易和{\it No-relation}之间互相混淆，而{\it Non-intimate}相比{\it No-relation}，更容易与{\it Intimate}混淆。
+此外，图\ref{fig:exp-error-case}给出了一些错误的测例，例如第一行第一张图，模型错误的将夫妻关系分类为朋友关系。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -270,7 +288,7 @@ colleagues''或``presenter audience''。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
-	\includegraphics[width=0.75 \textwidth,clip]{coarse-confu-matrix.png}
+	\includegraphics[width=0.55 \textwidth,clip]{coarse-confu-matrix.png}
 	%\hspace{0.02\textwidth}
 	%\vspace*{-0.08cm}
     \caption{PPRN-(obj region)模型在3种关系、coarse-level数据集上的混淆矩阵结果}
@@ -284,7 +302,7 @@ colleagues''或``presenter audience''。
 	\includegraphics[width=0.75 \textwidth,clip]{case-error.png}
 	%\hspace{0.02\textwidth}
 	%\vspace*{-0.08cm}
-    \caption{错误识别的结果}
+    \caption{错误识别的测例，左边的标签是标注，右边的标签是模型预测结果}
 	\vspace*{-3.5mm}
 	\label{fig:exp-error-case}
 \end{figure}
@@ -334,7 +352,7 @@ colleagues''或``presenter audience''。
 
 本章节主要介绍和分析了PPRN模型在PISC和PIPA-relation两个社会关系理解数据集上的实验结果。
 
-首先，本章介绍了两个大型数据集的图片来源、构造方式、关系类别的划分，其中PISC数据集包含两种关系粒度，PIPA-relation包含5个关系域和这5个关系域对应的15种关系类别与此同时，本文统计了各检测个数据集划分的图片数量，人对数量。本章进一步分析数据集的特点，具体来说包括两个指标：包含多个人对的图片比例，以及包含多种关系类别的比例。同时，本章给出了实验结果的评价方法mAP，取了一个例子来说明在物体领域怎么计算mAP。
+首先，本章介绍了两个大型数据集的图片来源、构造方式、关系类别的划分，其中PISC数据集包含两种关系粒度，PIPA-relation包含5个关系域和这5个关系域对应的15种关系类别。与此同时，本文统计了各检测个数据集划分的图片数量，人对数量。本章进一步分析数据集的特点，具体来说包括两个指标：包含多个人对的图片比例，以及包含多种关系类别的比例。同时，本章给出了实验结果的评价方法mAP，并且举例说明了在物体识别领域怎么计算mAP。
 
 接着，本章给出了模型的参数设置、不同训练步骤的优化方法。
 
