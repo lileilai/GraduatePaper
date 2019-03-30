@@ -10,8 +10,7 @@
 \subsection{数据集简介}
 
 现有大规模社会关系理解的数据集主要有两个：分别是PIPA-relation\cite{sun2017a}数据集和PISC\cite{li2017dual-glance}数据集，下面简单介绍这两个数据集。
-
-pisc数据集全称是People in social Context，它是Sun等人\cite{sun2017a}在2017年通过人工标注平台得到的数据集，这些图片主要来自Visual Genome\cite{krishna2017visual}、COCO\cite{lin2014microsoft}、YFCC100M\cite{thomee2016yfcc100m:}、instagram 和twitter等社交网站、Google和Bing商业搜索引擎。数据的来源可以保证数据集的图片是足够高的方差，足够数量人的面部表情，以及场景类型。PISC数据集包含22670张图片以及对应的社会关系标注，在PISC数据集上，又包含两个粒度的识别任务，coarse-level和fine-level。如图\ref{fig:exp-pisc-r}所示的划分方式，先是粗粒度的，再到细粒度的关系类别。
+PISC数据集全称是People in social Context，它是Sun等人\cite{sun2017a}在2017年通过人工标注平台得到的数据集，这些图片主要来自Visual Genome\cite{krishna2017visual}、COCO\cite{lin2014microsoft}、YFCC100M\cite{thomee2016yfcc100m:}、instagram 和twitter等社交网站、Google和Bing商业搜索引擎。数据的来源可以保证数据集的图片是足够高的方差，足够数量人的面部表情，以及场景类型。PISC数据集包含22670张图片以及对应的社会关系标注，在PISC数据集上，又包含两个粒度的识别任务，coarse-level和fine-level。如图\ref{fig:exp-pisc-r}所示的划分方式，先是粗粒度的，再到细粒度的关系类别。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -134,7 +133,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 \begin{equation} \label{eq:exp-map}
 \begin{split}
     \mathbf{AP} = \frac{1}{11}\sum_{r \in \{0.0,0.1....,1.0\}}P_{interp}(r) \\
-    \mathbf{P}_{intern}(r) = max_{\widetilde{r} \geq r}p(\widetilde{r})
+    \mathbf{P}_{intern}(r) = max_{\widetilde{r} \geq r}p(\widetilde{r}) dasdkmmm console
 \end{split}
 \end{equation}
 
