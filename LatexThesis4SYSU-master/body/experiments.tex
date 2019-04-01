@@ -22,7 +22,7 @@ PISC数据集全称是People in social Context，它是Sun等人\cite{sun2017a}�
 	\label{fig:exp-pisc-r}
 \end{figure}
 
-PIPA-relation数据集的全称是People in Photo Album Relation，总共包括37107张图片。同样是人工标注的数据集，基于社会关系理论\cite{bugental2000acquisition}划分的，Sun\cite{sun2017a}详细的给出了每个关系域的特征。然后所有的社会关系划分为5个关系域，在构建数据集的过程中，这5个关系域划分为16种社会关系，五个关系域分别是Attachment domain、Reciprocity domain、Mating domain、Hierarchical power domain和Coalitional groups domain。Attach domain划分为{\it father-child}，{\it mother-child}，{\it Grandpa-grandchild}和{\it grandma-grandchild}，Reciprocity domain划分为{\it friends}, {\it siblings}和{\it classmates}。Mating domain 只包含单条关系{\it lovers/spouses}。Hierarchical power domain划分为{\it presenter-audience}, {\it teacher-student}, {\it trainer-trainee} and {\it leader-subordinate}。Coalitional groups domain划分为{\it band members}, {\it dance team members}, {\it sport team members} and {\it colleagues} 。
+PIPA-relation数据集的全称是People in Photo Album Relation，总共包括37107张图片。同样是人工标注的数据集，基于社会关系理论划分的，Sun\cite{sun2017a}详细的给出了每个关系域的特征。然后所有的社会关系划分为5个关系域，在构建数据集的过程中，这5个关系域划分为16种社会关系，五个关系域分别是Attachment domain、Reciprocity domain、Mating domain、Hierarchical power domain和Coalitional groups domain。Attach domain划分为{\it father-child}，{\it mother-child}，{\it Grandpa-grandchild}和{\it grandma-grandchild}，Reciprocity domain划分为{\it friends}, {\it siblings}和{\it classmates}。Mating domain 只包含单条关系{\it lovers/spouses}。Hierarchical power domain划分为{\it presenter-audience}, {\it teacher-student}, {\it trainer-trainee} and {\it leader-subordinate}。Coalitional groups domain划分为{\it band members}, {\it dance team members}, {\it sport team members} and {\it colleagues} 。
 
 数据集的情况如表\ref{tab:exp-sta-one}，``Train''表示训练集图片的数量，``Valid''和``Test''分别表示验证和测试集的图片数量。``\#train''表示训练集人对的数量，``\#valid''和``\#test''分别表示验证和测试集的人对数量。
 \begin{table}[htpb]
@@ -34,7 +34,8 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
     \toprule
     数据集 & Train & Valid & Test & \#train  &  \#valid &  \#test  \\
     \midrule
-    PISC-coarse & 13142 & 4000 & 4000 & 14536 & 25636 & 15497   \\
+    PISC-coarse & 13142 & 4000 & 4000 & 14536 & 2
+    36 & 15497   \\
     \midrule
     PISC-fine &  16828 & 500 & 1250 & 55400 & 1505 & 3691 \\
     \midrule
@@ -45,7 +46,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 
 \subsection{数据集分析} \label{sec:exp-dataset-ana}
 
-对于数据集PISC-coarse、PISC-fine和PIPA-relation，本文做了基本的数据集分析，如表\ref{tab:exp-sta-two}，其中``Sui''表示一张图片有多个人对的比例，``Unsui''则表示一张图片只有一个人对的百分比。``Single Rel''一张图片包含的关系类别只有一种，``Multi Rel''表示一张图片包含多种关系。从表统计数据可以得到两个结论，从``Sui''和``Unsui''来看，绝大多数的图片是包含多个人对的，从``Multi Rel''来看，一张图片的关系种类往往是相同的，因为直观来看，给定场景下的社会关系是稳定的。例如，假如张图片是一个会议的场景，那么其中往往会有多个人对，并且这些人对间的社会关系往往是{\it colleagues}或{\it presenter audience}。
+对于数据集PISC-coarse、PISC-fine和PIPA-relation，本文做了基本的数据集分析，如表\ref{tab:exp-sta-two}，其中``Sui''表示一张图片有多个人对的比例，``Unsui''则表示一张图片只有一个人对的百分比。``Single Rel''一张图片包含的关系类别只有一种，``Multi Rel''表示一张图片包含多种关系。从表统计数据可以得到两个结论，从``Sui''和``Unsui''来看，绝大多数的图片是包含多个人对的，从``Multi Rel''来看，一张图片的关系种类往往是相同的，因为直观来看，给定场景下的社会关系是稳定的。假设张图片是一个会议的场景，那么其中往往会有多个人对，并且这些人对间的社会关系往往是{\it colleagues}或{\it presenter audience}。
 \begin{table}[htpb]
   \centering
   \caption{PISC、PIPA-relation分析表，单位为(\%)}
