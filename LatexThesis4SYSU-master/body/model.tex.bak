@@ -40,7 +40,7 @@ PPRN主要是由4个模块组成，模型的主要运算模块是向量，以下
 \section{利用GRU的推理模块}
 
 \subsection{消息传递模块}
-对于一张图片中$n$个人对的关系，通过特征抽取模块，得到了图片中所有人对关系的特征编码，$\{ \mathbf{v_{1}},\mathbf{v_{2}},...,\mathbf{v_{n}} \}$，并且对于一张图片构成的社会关系图谱，是一张全连接图。特征抽取模块得到的关系向量编码通过公式\ref{eq:model-hidden-init}所示，转换到一个低维空间，其中$ \varphi_{rel} $ 可是视为全连接层。
+对于一张图片中$n$个人对的关系，通过特征抽取模块，得到了图片中所有人对关系的特征编码，$\{ \mathbf{v_{1}},\mathbf{v_{2}},...,\mathbf{v_{n}} \}$，并且对于一张图片构成的社会关系图谱，是一张全连接图。特征抽取模块得到的关系向量编码通过公式\ref{eq:model-hidden-init}所示，转换到一个低维空间，其中$ \varphi_{rel} $ 可以视为全连接层。
 \begin{equation} \label{eq:model-hidden-init}
     \mathbf{x}_{i} = \varphi_{rel} (\mathbf{v_{i}})
 \end{equation}
@@ -148,7 +148,7 @@ $\mathbf{p}^{I,k,dom} \in \mathcal{R}^{|\mathcal{D}|}$如公式\ref{eq:model-pro
   i=1,2,\dots,|\mathcal{C}|或|\mathcal{D}|
   \end{split}
 \end{equation}
-这里的$\mathcal{C}$表示社会关系的类别，$|\mathcal{C}|$表示类别的数量，$\mathcal{D}$表示关系域的类别，$|\mathcal{D}|$表示关系域数量。由于是分类任务，模型最终的损失函数如公式\ref{eq:model-loss-eq}，其中$N(I)$表示图片I的人对数量,L(.) 表示交叉熵损失函数，$\mathcal{I}$ 表示整个图片集合。
+这里的$\mathcal{C}$表示社会关系的类别，$|\mathcal{C}|$表示类别的数量，$\mathcal{D}$表示关系域的类别，$|\mathcal{D}|$表示关系域数量。由于是分类任务，模型最终的损失函数如公式\ref{eq:model-loss-eq}，其中$N(I)$表示图片I的人对数量,L(.) 表示交叉熵损失函数，$\mathcal{I}$ 表示训练样本集合。
 \begin{equation}
   \label{eq:model-loss-eq}
   \mathcal{L} = - \frac{1}{\sum_{I \in \mathcal{I}}\text{N}(I)} \sum_{I \in \mathcal{I}} \sum_{k=1}^{\text{N}(I)} [ \sum_{i=1}^{|\mathcal{C}|} \text{L}(y_{i}^{I,k,rel}, p_{i}^{I,k,rel}) + \sum_{i=1}^{|\mathcal{D}|}\text{L}(y_{i}^{I,k,dom}, p_{i}^{I,k,dom}) ]

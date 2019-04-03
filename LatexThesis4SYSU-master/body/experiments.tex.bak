@@ -22,7 +22,7 @@ PISC数据集全称是People in social Context，它是Sun等人\cite{sun2017a}�
 	\label{fig:exp-pisc-r}
 \end{figure}
 
-PIPA-relation数据集的全称是People in Photo Album Relation，总共包括37107张图片。同样是人工标注的数据集，基于社会关系理论划分的，Sun\cite{sun2017a}详细的给出了每个关系域的特征。然后所有的社会关系划分为5个关系域，在构建数据集的过程中，这5个关系域划分为16种社会关系，五个关系域分别是Attachment domain、Reciprocity domain、Mating domain、Hierarchical power domain和Coalitional groups domain。Attach domain划分为{\it father-child}，{\it mother-child}，{\it Grandpa-grandchild}和{\it grandma-grandchild}，Reciprocity domain划分为{\it friends}, {\it siblings}和{\it classmates}。Mating domain 只包含单条关系{\it lovers/spouses}。Hierarchical power domain划分为{\it presenter-audience}, {\it teacher-student}, {\it trainer-trainee} and {\it leader-subordinate}。Coalitional groups domain划分为{\it band members}, {\it dance team members}, {\it sport team members} and {\it colleagues} 。
+PIPA-relation数据集的全称是People in Photo Album Relation，总共包括37107张图片。同样是人工标注的数据集，基于社会关系理论划分的，Sun\cite{sun2017a}详细的给出了每个关系域的特征。然后所有的社会关系划分为5个关系域，在构建数据集的过程中，这5个关系域划分为16种社会关系，五个关系域分别是Attachment domain、Reciprocity domain、Mating domain、Hierarchical power domain和Coalitional groups domain。Attach domain划分为{\it father-child}，{\it mother-child}，{\it Grandpa-grandchild}和{\it grandma-grandchild}，Reciprocity domain划分为{\it friends}, {\it siblings}和{\it classmates}。Mating domain 只包含单条关系{\it lovers/spouses}。Hierarchical power domain划分为{\it presenter-audience}, {\it teacher-student}, {\it trainer-trainee}和 {\it leader-subordinate}。Coalitional groups domain划分为{\it band members}, {\it dance team members}, {\it sport team members} 和 {\it colleagues} 。
 
 数据集的情况如表\ref{tab:exp-sta-one}，``Train''表示训练集图片的数量，``Valid''和``Test''分别表示验证和测试集的图片数量。``\#train''表示训练集人对的数量，``\#valid''和``\#test''分别表示验证和测试集的人对数量。
 \begin{table}[htpb]
@@ -46,7 +46,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 
 \subsection{数据集分析} \label{sec:exp-dataset-ana}
 
-对于数据集PISC-coarse、PISC-fine和PIPA-relation，本文做了基本的数据集分析，如表\ref{tab:exp-sta-two}，其中``Sui''表示一张图片有多个人对的比例，``Unsui''则表示一张图片只有一个人对的百分比。``Single Rel''一张图片包含的关系类别只有一种，``Multi Rel''表示一张图片包含多种关系。从表统计数据可以得到两个结论，从``Sui''和``Unsui''来看，绝大多数的图片是包含多个人对的，从``Multi Rel''来看，一张图片的关系种类往往是相同的，因为直观来看，给定场景下的社会关系是稳定的。假设张图片是一个会议的场景，那么其中往往会有多个人对，并且这些人对间的社会关系往往是{\it colleagues}或{\it presenter audience}。
+对于数据集PISC-coarse、PISC-fine和PIPA-relation，本文做了基本的数据集分析，如表\ref{tab:exp-sta-two}，其中``Sui''表示一张图片有多个人对的比例，``Unsui''则表示一张图片只有一个人对的百分比。``Single Rel''一张图片包含的关系类别只有一种，``Multi Rel''表示一张图片包含多种关系。从表统计数据可以得到两个结论，从``Sui''和``Unsui''来看，绝大多数的图片是包含多个人对的，从``Multi Rel''来看，一张图片的关系种类往往是相同的，同时直观来看，给定场景下的社会关系是稳定的。假设一张图片是一个会议的场景，那么其中往往会有多个人对，并且这些人对间的社会关系往往是{\it colleagues}或{\it presenter audience}。
 \begin{table}[htpb]
   \centering
   \caption{PISC、PIPA-relation分析表，单位为(\%)}
@@ -118,7 +118,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
     \bottomrule
   \end{tabular}
 \end{table}
-根据数据，以Recall为横坐标，Precision为纵坐标，可以画出如图\ref{fig:exp-map}所示的曲线c。将recall 值划分为11个值，我们将$Recall \geq \widetilde{r}$的Precision 替换为最大的，由此可得到曲线c。计算方法如公式
+根据数据，以Recall为横坐标，Precision为纵坐标，可以画出如图\ref{fig:exp-map}所示的曲线B。将recall 值划分为11个值，我们将$Recall \geq \widetilde{r}$的Precision 替换为最大的，由此可得到曲线C。计算方法如公式
 \ref{eq:exp-map}所示。我们给定的数据，对于苹果这一类别的AP = $(5 \times 1.0 + 4 \times 0.57 + 2 \times 0.5)/11$
 \begin{figure}[htpb]
 	\centering
@@ -149,7 +149,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
     \item \textbf{GRM}\cite{wang2018deep}提出了一个图推理模型来提升社会关系理解任务，该模型集成物体和社会关系共现概率的先验知识，GRM采用的是人对特征和上下文物体特征之间的消息传递。
 \end{itemize}
 
-在表\ref{tab:exp-result-1}中，我们展示了在PISC数据集上，按照每个类别的召回率和``mAP''的设定得到的实验结果，这里需要说明的是因为在PISC-coarse中的关系粒度已经是最粗的，所以在实际实现过程中只存在关系损失，domain loss只在PISC\_fine 和PIPA数据集上进行了实验。
+在表\ref{tab:exp-result-1}中，我们展示了在PISC数据集上，按照每个类别的召回率和``mAP''的设定得到的实验结果，这里需要说明的是因为在PISC-coarse中的关系粒度已经是最粗的，所以在实际实现过程中只存在关系损失，domain loss只在PISC-fine 和PIPA数据集上进行了实验。
 \begin{table*}[htpb]
   \centering
   \caption{在PISC-coarse上的实验结果，单位为百分比(\%)}
@@ -269,7 +269,7 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
 \begin{enumerate}
     \item 首先，对于前面提到的PPRN模型的主要工作是捕获关系之间交互的文信息，没有考虑周边的物体信息，考虑这部分的信息是需要引入额外的物体检测模型。PPRN+obj在消息传递机制的基础上进一步加入周边物体的信息，但是在多个实验中并没有超过未引入这部分信息的基准模型。从周边的物体信息的角度来看，周边的物体信息可以认为是形成了一个场景，物体上下文特征起作用的前提是物体检测和识别模型性能效果，同时这部分的特征形成的场景信息往往是单一的，对最后的关系编码的约束也是单一的，同时考虑关系的上下文类似于考虑上下文物体的信息。
     \item 其次，在GRM等引入关系类别和物体类别共现的常识知识，很大程度依赖物体的类别是否正确，才能确定加入的常识知识是否正确。第一，例如在当前图片中，检测到了{\it laptop}，容易倾向于推理出当前场景下所有人对关系为{\it professional}，但是faster-rcnn并不是总能识别正确，所以会带来很大的噪声。第二，检测出的{\it laptop}会帮助{\it professional}关系的正确分类，但是对{\it friends}来说并不存在这样的辅助作用，并且这两类关系在现实数据集和场景中大量存在。
-    \item 本文通过引入的domain loss，在PISC\_fine上取得了明显的提升，模型通过同时优化relation loss和domain loss，这样两个任务之间可以共享一些信息，并且相互约束，帮助区分属于不同关系域的关系。
+    \item 本文通过引入的domain loss，在PISC-fine上取得了明显的提升，模型通过同时优化relation loss和domain loss，这样两个任务之间可以共享一些信息，并且相互约束，帮助区分属于不同关系域的关系。
     \item 如表\ref{tab:exp-mp-variant}所示，RCNN是只用到了图片中物体信息，是最差的效果。Dual-glance训练了一个基于注意力机制的人对模块根据不同的人对关系来结合不同比重的物体特征。对于模型PPRN+obj来说，模型效果并没有提升，依据前面的分析，关系上下文覆盖了周边物体区域上下文的部分，并且实验证明了我们的假设。
 \end{enumerate}
 
