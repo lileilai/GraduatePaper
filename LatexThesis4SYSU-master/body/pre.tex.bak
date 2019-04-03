@@ -121,7 +121,7 @@ SGD的梯度更新方法如公式\label{eq:sgd}所示，找出参数的梯度，
 \end{figure}
 
 综合上述对于卷积神经网络的卷积和池化的介绍，因为每层的输入和输出都表现为特征图的形式，因此卷积神经网络可以和全连接的网络一样可以有多层，并且取得更好的效果。LeNet-5\cite{lecun1998gradient-based}是
-Yang LeCun等人在$1988$年提出的，它是第一个成功应用于数字识别问题的卷积神经网络，在著名的MINIST 数据集上，LeNet-5 可以取得大约$99.2\%$ 的准确率。LeNet-5是一个经典的卷积神经网络，前5层分别是卷积层和池化层，后2层全连接层。之后于$2012$ 年提出的AlexNet\cite{krizhevsky2012imagenet}，其网络结构如图\ref{fig:alexnet-example}首次使用Relu 激活函数替代Sigmoid，并且验证了其在较深网络上的作用，成功解决了Sigmoid在较深网络的梯度弥散问题，虽然Relu 很早就提出了。其次，AlexNet首次在训练中使用dropout层抑制一部分激活的神经元，以避免过拟合，并且通过实践证明了效果。与此同时，模型还采用了数据增强等trick 来防止过拟合，使用cuda提高训练速度。而之后提出的VGG\cite{simonyan2015very}，相比较与之前的LeNet 和AlexNet，最大的特点是网络更深，具有16-19层，不包含池化和最后的softmax 层。
+Yang LeCun等人在$1988$年提出的，它是第一个成功应用于数字识别问题的卷积神经网络，在著名的MINIST 数据集上，LeNet-5 可以取得大约$99.2\%$ 的准确率。LeNet-5是一个经典的卷积神经网络，前5层分别是卷积层和池化层，后2层全连接层。之后于$2012$ 年提出的AlexNet\cite{krizhevsky2012imagenet}，其网络结构如图\ref{fig:alexnet-example}首次使用Relu 激活函数替代Sigmoid，并且验证了其在较深网络上的作用，成功解决了Sigmoid在较深网络的梯度弥散问题，虽然Relu 很早就提出了。其次，AlexNet首次在训练中使用dropout 层抑制一部分激活的神经元，以避免过拟合，并且通过实践证明了效果。与此同时，模型还采用了数据增强等trick 来防止过拟合，使用cuda提高训练速度。而之后提出的VGG\cite{simonyan2015very}，相比较与之前的LeNet 和AlexNet，最大的特点是网络更深，具有16-19 层，不包含池化和最后的softmax 层。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -150,14 +150,14 @@ ResNet\cite{he2016deep}是何凯明等人(2016)提出的，针对前面网络并
 
 \subsection{消息传递}
 
-消息传递是图推理的一种形式，条件随机场（Conditional Random Field）广泛的用在了图推理问题上。Johnson\cite{johnson2015image}将CRF 用于图像检索领域的场景图谱与对应图片的绑定的推断。本文用的方法类似于CRFasRNN\cite{zheng2015conditional}和Graph-LSTM\cite{liang2016semantic}。受到\cite{xu2017scene}的启发，Xu 在场景图谱的生成任务中，设计了原始图和对偶图，原始图用于图片中物体节点的预测，对偶图用于关系节点的预测。和之前不同的是，我们只是对其中的关系节点构建图，通过关系的消息传递机制，我们的模型是迭代的提纯社会关系理解的预测。而不是像标准的循环神经网络（Recurrent Neural Network）只是单次预测，并不能达到提纯的效果。下面的部分我们介绍关于CRF 和本文中用到了循环神经网络（RNN）以及门控循环网络（Gated Recurrent Unit,GRU）。
+消息传递是图推理的一种方法，条件随机场（Conditional Random Field）广泛的用在了图推理问题上。Johnson\cite{johnson2015image} 将CRF 用于图像检索领域的场景图谱与对应图片的绑定的推断。本文用的方法类似于CRFasRNN\cite{zheng2015conditional} 和Graph-LSTM\cite{liang2016semantic}。受到\cite{xu2017scene}的启发，Xu 在场景图谱的生成任务中，设计了原始图和对偶图，原始图用于图片中物体节点的预测，对偶图用于关系节点的预测，利用迭代的消息传递机制实现物体和关系识别的联合训练。和Xu不同的是，我们只是对其中的关系节点构建图，通过关系的消息传递机制，我们的模型是迭代的提纯社会关系理解的预测。而不是像标准的循环神经网络（Recurrent Neural Network）只是单次预测，并不能达到提纯的效果。下面的部分我们介绍关于CRF 和本文中用到了循环神经网络（RNN）以及门控循环网络（Gated Recurrent Unit,GRU）。
 
 \subsubsection{条件随机场}
-CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\textbf{X}的条件下，构建条件概率模型\textbf{P(Y|X)}。条件随机场的定义如下：设\textbf{X}与\textbf{Y}是随机变量，\textbf{P(Y|X)}是在给定
-\textbf{X}的条件下\textbf{Y}的条件概率分布。令G = (V,E)表示一个无向图，V 是节点的集合，E 是无向边，$Y_{v}$ 表示与节点v 对应的标记向量，$w~v$ 表示在图中所有与节点v有边连接的所有节点w，
-$w \neq v$表示节点v以外的所有节点，如果所有的节点$Y_v$都满足公式\ref{eq-crf}  的马尔科夫性质，那么称(Y,X) 为一个条件随机场。
+CRF是一种判别式无向图模型，用于对条件分布建模，在给定随机变量\textbf{X}的条件下，构建条件概率模型$P(Y | X)$。条件随机场的定义如下：设\textbf{X}与\textbf{Y}是随机变量，$P(Y|X)$是在给定
+X的条件下Y的条件概率分布。令G = (V,E)表示一个无向图，V 是节点的集合，E 是无向边，$Y_{v}$ 表示与节点v 对应的标记向量，$w \sim v$ 表示在图中所有与节点v有边连接的所有节点w，
+$w \neq v$表示节点v以外的所有节点，如果所有的节点$Y_v$都满足公式\ref{eq-crf}  的马尔科夫性质，那么称(~Y~,~X~) 为一个条件随机场。
 \begin{equation} \label{eq-crf}
-    P(~Y_{v}~|~X,Y_w,w \neq v~) = P(~Y_v~|~X,Y_w,w~v~)
+    P(~Y_{v}~|~X,Y_w,w \neq v~) = P(~Y_v~|~X,Y_w,w \sim v~)
 \end{equation}
 CRF引入了特征函数（指数函数的形式）,对于其中的特例线性链条件随机场，线性链条件随机场如图\ref{fig:crf}。
 \begin{figure}[htpb]
@@ -192,7 +192,7 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 	\label{fig:rnn}
 \end{figure}
 由于标准的RNN网络会由于结构的问题，无法处理梯度消失和梯度爆炸的问题。后续的研究人员针对梯度消失问题，提出了LSTM\cite{hochreiter1997long} 和GRU\cite{cho2014learning} 等改良的RNN网络。这里着重介绍本文中用到的GRU结构。基本结构如图
-\ref{fig:gru}，GRU解决梯度消失的方法是引入了一个更新门（update gate），该机制可用于控制在BP算法时，计算梯度的时候，通过更新门记住之前的信息，使得求导时不会陷入极小的情况，从而达到解决梯度消失问题。
+\ref{fig:gru}，GRU解决梯度消失的方法是引入了一个更新门（update gate），该机制可用于控制在执行BP算法时，计算梯度的时候，通过更新门记住之前的信息，使得求导时不会陷入极小的情况，从而达到解决梯度消失问题。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -208,14 +208,14 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 
 \section{物体检测与识别}
 
-在社会关系识别的任务中，有一个重要的模块是利用物体识别模型得到人的场景信息，即采用物体识别模型识别去当前图片中包含了哪些物体，得到该物体在图片的区域。物体识别的模型包括Ross 等人提出的RCNN\cite{girshick2014rich}，fast-RCNN\cite{girshick2015fast}，以及Ren 等人（2016）\cite{ren2015faster}提出的faster-RCNN。前面提到的三个模型都是基于区域的物体检测模型，RCNN\cite{girshick2014rich} 首次提出在目标图像中有多个目标框，然后判断目标框是否包含物体，具体的检测步骤如下：
-（1）其中采用选择性搜索的方法得到图片中的所需要的目标框区域，将得到的区域调整为卷积神经网络输入的消息。
+在社会关系识别的任务中，有一个重要的模块是利用物体识别模型得到人的场景信息，即采用物体识别模型识别去当前图片中包含了哪些物体，得到该物体在图片的区域。物体识别的模型包括Ross 等人提出的RCNN\cite{girshick2014rich}，fast-RCNN\cite{girshick2015fast}，以及Ren 等人（2016）\cite{ren2015faster}提出的faster-RCNN。 前面提到的三个模型都是基于区域的物体检测模型，RCNN\cite{girshick2014rich} 首次提出在目标图像中有多个目标框，然后判断目标框是否包含物体，具体的检测步骤如下：
+（1）其中采用选择性搜索的方法得到图片中的所需要的目标框区域，将得到的区域调整为卷积神经网络输入的大小。
 （2）利用一个预训练好的卷积神经网络，提取第一步得到的区域中的特征。
 （3）将第二步中得到的特征当作一个线性SVM的输入，得到物体的类别，另外训练一个线性回归模型得到物体的目标框。
-RCNN的主要缺点是对于一张图片中的每个感兴趣区域，需要遍历提取其中的特征，然后依次执行物体的分类和物体框的回归，需要耗费较多时间。由于全卷积和池化层不改变某个区域在特征图和原图的位置，因此fast-RCNN 在RCNN 的基础上提出了ROI(region of interest) 池化层，将图片输入到卷积神经网络中，对于特征图上的区域，经过ROI池化层进行调整，然后再继续之后的全连接层和一个线性回归层进行分类和目标框的确定。综上，fast-RCNN 较大程度上提高了物体检测的性能。由于fast-RCNN 在大数据集上的表现依然不能满足实际的需求，因为RCNN和fast-RCNN 均采用选择性搜索的方法得到所需要的区域，这个步骤是比较耗费时间。因此faster-RCNN 提出RPN（region proposal network），RPN主要网络包括两部分，一部分主要是对生成的anchors进行判断是foreground 还是background，其中foreground 代表目标，另外一部分主要是对检测框的位置进行调整。经过RPN 网络后得到候选区域，再利用ROI 池化得到特征向量进行物体类别的判断和物体框的进一步精确判断。
+RCNN的主要缺点是对于一张图片中的每个感兴趣区域，需要遍历提取其中的特征，然后依次执行物体的分类和物体框的回归，需要耗费较多时间。由于全卷积和池化层不改变某个区域在特征图和原图的位置，因此fast-RCNN 在RCNN 的基础上提出了ROI(region of interest) 池化层，将图片输入到卷积神经网络中，对于特征图上的区域，经过ROI池化层进行调整，然后再继续之后的全连接层和一个线性回归层进行分类和目标框的确定。综上，fast-RCNN 较大程度上提高了物体检测的性能。由于fast-RCNN 在大数据集上的表现依然不能满足实际的需求，因为RCNN和fast-RCNN 均采用选择性搜索的方法得到所需要的区域，这个步骤是比较耗费时间。因此faster-RCNN 提出RPN（region proposal network），RPN网络主要包括两部分，一部分主要是对生成的锚点(anchors)进行判断是foreground 还是background，其中foreground 代表目标，另外一部分主要是对检测框的位置进行调整。经过RPN 网络后得到候选区域，再利用ROI 池化得到特征向量进行物体类别的判断和物体框的进一步精确判断。
 
 
-综上，以上的篇幅主要是回顾了在社会关系检测的工作中，有用的物体检测方法和一些相关工作。结论是得益于GPU 等硬件设备的发展，物体识别领域的算法也得到了快速的发展，尤其是随着特征提取模块的发展，卷积网络越来越深，能学习到更多更丰富的特征。对于一幅图片，我们能在得到更多的、更准确的物体框和类别。
+综上，以上的篇幅主要是回顾了在社会关系检测的工作中，已有的物体检测方法和一些相关工作。结论是得益于GPU 等硬件设备的发展，物体识别领域的算法也得到了快速的发展，尤其是随着特征提取模块的发展，卷积网络越来越深，能学习到更多更丰富的特征。对于一幅图片，我们能在得到更多的、更准确的物体框和类别。
 
 \section{社会关系检测}
 本章将回顾社会关系检测领域的一些相关工作，并且对于消息传递机制的介绍，以及消息传递机制的相关工作的一些介绍。
@@ -228,10 +228,10 @@ Zhang~等人\cite{zhang2015learning}提出的模型认为从心理学的角度�
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
-	\includegraphics[width=0.75 \textwidth,clip]{1.png}
+	\includegraphics[width=0.55 \textwidth,clip]{1.png}
 	%\hspace{0.02\textwidth}
 	%\vspace*{-0.08cm}
-    \caption{zhang的模型}
+    \caption{Zhang的模型}
 	\vspace*{-3.5mm}
 	\label{fig:model_zhang}
 \end{figure}
@@ -240,7 +240,7 @@ Zhang~等人\cite{zhang2015learning}提出的模型认为从心理学的角度�
 \begin{equation}
 \begin{split}
      arg\max \limits_{\Omega} p(\{\mathbf{w}_{g_{i}}\}_{i=1}^8, ~\mathbf{W}, ~\mathbf{K}^r & ~|~ \mathbf{g},~\mathbf{x_t},~\mathbf{x_s},~\mathbf{I}^r,~\mathbf{I}^l) \propto \\
-     (\sum_{i=1}^{8}~p(g_i~|~x_t,x_s)~p(w_{g_i}))~ & ~(\sum_{j=1}{K}~p(k_j^l)~p(k_j^r))~p(\mathbf(W)), \\
+     (\sum_{i=1}^{8}~p(g_i~|~x_t,x_s)~p(w_{g_i}))~ & ~(\sum_{j=1}{K}~p(k_j^l)~p(k_j^r))~p\mathbf(W), \\
      s.t. ~\mathbf{K}^r &= \mathbf{K}^l
 \end{split}
 \end{equation}
@@ -252,36 +252,36 @@ Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会�
 \begin{equation}\label{eq:select-rp}
     R(b1,b2;I) = \{c \in P_{I} : max(G(c,b1),G(c,b2))<\tau_{u}\}
 \end{equation}
-利用faster-RCNN得到的特征图，采用ROI pooling抽取出固定长度的的向量物体特征向量$v \in R^{k}$。 同时用$\{v_i|i=1, 2, .... N\}$作为$R_(v1,b2;I)$ 中的物体向量集合。然后依次采用公式\ref{eq:atten-1} 方式将$\mathbf{v}_{top}$ 和物体的向量集合得到$h_i$。
+利用faster-RCNN得到的特征图，采用ROI pooling抽取出固定长度的特征向量$v \in R^{k}$。 同时用$\{v_i|i=1, 2, .... N\}$作为$R_(v1,b2;I)$ 中的物体向量集合。然后依次采用公式\ref{eq:atten-1} 方式将$\mathbf{v}_{top}$ 和物体的向量集合得到$h_i$。
 \begin{equation}\label{eq:atten-1}
-    h_i = v_i + w_{top} \otimes v_{top}
+    \mathbf{h_i} = \mathbf{v_i} + \mathbf{w_{top}} \otimes \mathbf{v_{top}}
 \end{equation}
-之后采用attention的方式将$h_i$得到最终的得分$s_i$，具体细节如公式\ref{eq:atten-2} 所示，其中attention 的权重$a_{i} \in [0,1]$
+之后采用attention的方式将$\mathbf{h_i}$得到最终的得分$\mathbf{s_i}$，具体细节如公式\ref{eq:atten-2} 所示，其中attention 的权重$a_{i} \in [0,1]$
 \begin{equation} \label{eq:atten-2}
     \begin{split}
         a_{i} &= \frac{1}{1+exp(-(W_{h,a}h_{i}+b_{a}))} \\
-        v^{att}_{i} &= a_{i}v_{i} \\
+        ~v^{att}_{i} &= a_{i}v_{i} \\
         s_{i} &= W_{s} v_{i}^{att} + b_{s}
     \end{split}
 \end{equation}
 
-GRM（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的信息对于判断人对之间的社会关系是有帮助的，但是现有的模型忽略了周边物体的语义和这些物体以及社会关系的先验知识。除此之外，周边物体和社会关系的交互太过简化了。因此，GRM采用深度学习结合先验知识制定了一个图推理模型（Graph Reasoning Model）来实现社会关系检测任务。首先，GRM基于训练集中的样本构建了一个描述物体和社会关系共现的图谱。形式化来说，先验知识图谱表示为$\mathrm{G} = \{\mathrm{V},\mathrm{A}\}$，其中$\mathrm{V}$ 表示图上的节点集合，$\mathrm{A}$ 表示节点间的邻接矩阵。当前的图$\mathrm{G}$ 包含两种节点类型，一种节点表示关系节点，一种表示物体节点，针对当前图片场景构建的图的节点来说，采用相应图片对应区域抽取出的特征向量初始化。对于社会关系节点，这里采用Li等人的方式\cite{li2017dual-glance}的方式修剪出三部分包含人的区域，利用预训练好的ResNet提取出特征向量，与空间信息等特征向量进行拼接得到一个$d$维的特征向量$f_{h},f_{h} \in \mathrm{R}^d$。$f_h$ 作为所有社会关系节点的初始化向量。对于物体节点来说，我们需要用到在大规模训练集上预先训练好的faster-RCNN\cite{ren2015faster}，由于PISC-coarse 和PISC-fine等数据集并没有标注好的物体类别。这里的大规模数据集指的是COCO\cite{lin2014microsoft}，COCO是专门为了物体识别标注的数据集，包含我们日常生活中常见的80 类的物体。利用物体检测模型提取出高于置信度$\phi$ （$\phi$是一个超参数），对于这里未检测到的物体，采用全$0$ 的特征向量。
+GRM（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的信息对于判断人对之间的社会关系是有帮助的，但是现有的模型忽略了周边物体的语义和这些物体以及社会关系的先验知识。除此之外，周边物体和社会关系的交互太过简化了。因此，GRM采用深度学习结合先验知识制定了一个图推理模型（Graph Reasoning Model）来实现社会关系检测任务。首先，GRM 基于训练集中的样本构建了一个描述物体和社会关系共现的图谱。形式化来说，先验知识图谱表示为$\mathrm{G} = \{\mathrm{V},\mathrm{A}\}$，其中$\mathrm{V}$ 表示图上的节点集合，$\mathrm{A}$ 表示节点间的邻接矩阵。当前的图$\mathrm{G}$ 包含两种节点类型，一种节点表示关系节点，一种表示物体节点，针对当前图片场景构建的图的节点来说，采用相应图片对应区域抽取出的特征向量初始化。对于社会关系节点，这里采用Li等人的方式\cite{li2017dual-glance}的方式修剪出三部分包含人的区域，利用预训练好的ResNet提取出特征向量，与空间信息等特征向量进行拼接得到一个$d$维的特征向量$f_{h},f_{h} \in \mathrm{R}^d$。$f_h$ 作为所有社会关系节点的初始化向量。对于物体节点来说，我们需要用到在大规模训练集上预先训练好的faster-RCNN\cite{ren2015faster}，由于PISC和PIPA-relation等数据集均没有标注好的物体类别。这里的大规模数据集指的是COCO\cite{lin2014microsoft}，COCO是专门为了物体识别标注的数据集，包含我们日常生活中常见的80 类的物体。利用物体检测模型提取出高于置信度$\phi$ （$\phi$是一个超参数），对于这里未检测到的物体，采用全$0$ 的特征向量。
 之后利用GGNN(Gated Graph Neural Network)网络\cite{li2016gated}来执行图上的消息传递。通过GGNN，能探索人对和图片场景中物体的交互。物体的类别是一个关键的因素用于区分不同的社会关系，但是由于有的物体的信息对于判定社会关系时不重要的、甚至起到了干扰的作用，因此GRM 提出了图注意力的机制，有选择的采用能起到区分不同社会关系的物体节点，按照区分能力的大小给予不同的权重。综上所述，GRM模型提供了一个可解释的方法来提高社会关系检测的能力，从周边场景中推理得到有效的信息。
 
-前文提到了图片上人对的特征和物体的信特征抽取，GRM接下来需要执行不同节点间的信息传递，对于其中GGNN 的执行过程，对于图$\mathrm{G}$ 中的节点$v$，其对应的隐藏状态为$h_{v}$，GGNN模型融合邻接节点的信息来更新$v$节点隐藏状态，GGNN采用类似于Gated Recurrent Unit（GRU）\cite{cho2014learning}机制的方式实现节点间的信息融合。所以，对于第$t$步GRU unit的输入为$a_v^t$和$h_v^t$，$a_v^t$是融合邻接物体节点的信息向量，融合方式如公式\ref{eq-aggre}，其中$A_v^{\tau}$ 代表前面提到的物体和社会关系的邻接矩阵，矩阵的值为它们在训练集中共现的概率。
+前文提到了图片上人对的特征和物体的信特征抽取，GRM接下来需要执行不同节点间的信息传递，对于其中GGNN 的执行过程，对于图$\mathrm{G}$ 中的节点$v$，其对应的隐藏状态为$h_{v}$，GGNN模型融合邻接节点的信息来更新$v$节点隐藏状态，GGNN采用类似于Gated Recurrent Unit（GRU）\cite{cho2014learning}机制的方式实现节点间的信息融合。所以，对于第$t$ 步GRU unit的输入为$a_v^t$和$h_v^t$，$a_v^t$是融合邻接物体节点的信息向量，融合方式如公式\ref{eq-aggre}，其中$A_v^{\tau}$ 代表前面提到的物体和社会关系的邻接矩阵，矩阵的值为它们在训练集中共现的概率。
 \begin{equation}\label{eq-aggre}
     a_v^t = A_{v}^{\tau}[~h_1^{t-1}~...~h_{|V|}^{t-1}~]^{\tau} + b
 \end{equation}
-经过$T$此GRU的迭代后，分别得到物体节点、关系节点的隐藏层表示。但是由于周边的物体在区分不同的关系起到不同的作用，GRM采用attention机制来结合物体的信息。attention的如公式\ref{eq:graph-atte}，其中得到邻接物体节点权重为$\alpha_{ij}$。 进过GGNN、attention 两个模块后，得到表示社会关系的特征向量$\mathbf{f}_{i}$，用做最后的分类，取概率最大的作为当前人对的关系。
+经过$T$此GRU的迭代后，分别得到物体节点、关系节点的隐藏层表示。但是由于周边的物体在区分不同的关系起到不同的作用，GRM采用attention机制来结合物体的信息。attention如公式\ref{eq:graph-atte}，其中得到邻接物体节点权重为$\alpha_{ij}$。 进过GGNN、attention 两个模块后，得到表示社会关系的特征向量$\mathbf{f}_{i}$，用做最后的分类，取概率最大的作为当前人对的关系。
 \begin{equation}\label{eq:graph-atte}
     \begin{split}
-        \mathbf{h}_{ij} &= tanh(\mathbf{U}^ah_{r_{i}}) \odot tanh(\mathbf{V}^ah_{o_{j}}) \\
-        e_{ij} &= \mathbf{Atten}(\mathbf{h}_{ij}) \\
-        \alpha_{ij} &= \sigma(e_{ij})
+        \mathbf{h_{ij}} &= tanh(\mathbf{U^a}h_{r_{i}}) \odot tanh(\mathbf{V}^ah_{o_{j}}) \\
+        \mathbf{e_{ij}} &= Atten(\mathbf{h_{ij}}) \\
+        \alpha_{ij} &= \sigma(\mathbf{e_{ij}})
     \end{split}
 \end{equation}
 
-在本文写作期间，Zhang等人\cite{zhang2019multi}提出了MGR模型，MGR模型是一个集成模型，该工作认为只有引入多种不同粒度的信息才能综合的捕获人和人之间的关系语义信息。从全局看，MGR 利用残差网络处理整张图片，输出场景级别的关系特征编码。从中等的粒度来看，与Dual-glance 和GRM 一样，MGR同样考虑到了人和物之间的共现关系。对于最细粒度的特征，MGR首次引入人身体的姿势特征。MGR 通过创建人和物之间的图结构，人的姿势的图建构来全面的捕获人对间的关系表示。MGR 利用图卷积神经网络（Graph Convolutional Network）\cite{kipf2016semi}处理图结构。
+在本文写作期间，Zhang等人\cite{zhang2019multi}提出了MGR模型，MGR模型是一个集成模型，该工作认为只有引入多种不同粒度的信息才能综合的捕获人和人之间的关系语义信息。从全局看，MGR 利用残差网络处理整张图片，输出场景级别的关系特征编码。从中等的粒度来看，与Dual-glance 和GRM 一样，MGR同样考虑到了人和物之间的共现关系。对于最细粒度的特征，MGR首次引入人身体的姿势特征。MGR 通过创建人和物之间的图结构，人的姿势的图建构来全面的捕获人对间的关系表示。并且，MGR 利用图卷积神经网络（Graph Convolutional Network）\cite{kipf2016semi}处理图结构。
 
 
 综上所述，现有的工作均在只是提取人在图像上区域的特征的基准模型的基础上，进一步的引入了更多的信息，更多的约束。直观来看，单纯从两个人的图像区域信息直接推断出社会关系类别确实是很大的挑战，所以一种解决方案是如何引入上下文的信息来辅助判别，这也是本文工作的切入点。
@@ -290,9 +290,9 @@ GRM（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的
 
 首先，由于在图像领域的实际任务越来越复杂，传统的特征提取方法依靠大量人工的先验知识来设计特征提取器，这并不能应对当前的需求，如何提取图像的特征向量变得越来越重，同时这也是深度网络得到发展的原因之一。本章首先给出了神经网络的发展过程，从最简单的逻辑神经元模型出发，解释了连接权重、激活函数和优化方法等概念。到图像领域常用的卷积神经网络，并且简要的阐述了卷积神经网络的特点局部连接与权重共享。同时举例说明了卷积神经网络的卷积层和池化层的细节。之后卷积神经网络的架构的发展，从第一个开始应用的卷积神经网络LeNet，以及之后网络层数不断加深的AlexNet和VGG等架构，不断刷新了深度神经网络的表现能力，与此同时在些网络结构中也成功的运用了避免梯度消失的激活函数ReLU、以及防止过拟合的dropout 层等。这些方法极大的促进了深度神经网络的发展，即卷积核越来越小，层数越来越深。同时也介绍了和本文相关消息传递机制，我们也简要的介绍了消息传递的图推理方式CRF，以及循环神经网络RNNs。
 
-然后，回顾了物体检测与识别的三个经典方法RCNN、fast-RCNN和faster-RCNN，按照时间轴的顺序分析每篇文章的贡献和缺点，RCNN首次提出了基于感兴趣区域的物体检测，但是由于对每张图片的每个区域的特征提取是独立的，所以需要耗费大量的时间。之后的fast-RCNN对于每张图片的所有感兴趣区域只运行一次，然后运用ROI池化的方法，虽然这样极大的降低了检测时间，但对于大规模的真实数据集还是不够理想。而faster-RCNN 从提取感兴趣区域出发，提出RPN 网络替代选择性搜索，极大的提高了检测的速度。
+然后，回顾了物体检测与识别的三个经典方法RCNN、fast-RCNN和faster-RCNN，按照时间轴的顺序分析每个工作的优点和缺点，RCNN首次提出了基于感兴趣区域的物体检测，但是由于对每张图片的每个区域的特征提取是独立的，所以需要耗费大量的时间。之后的fast-RCNN对于每张图片的所有感兴趣区域只运行一次，然后运用ROI池化的方法，虽然这样极大的降低了检测时间，但对于大规模的真实数据集还是不够理想。而faster-RCNN 从提取感兴趣区域出发，提出RPN 网络替代选择性搜索，极大的提高了检测的速度。
 
-最后，本文对社会关系理解的近年工作进行了回顾，Li提出的\textbf{dual-glance}包含两个部分，其主要思想是利用物体检测模块的RPN 网络生成的物体候选区域来当作上下文，用该特征来提存由人的区域提取得到的特征向量，该方法相比基准模型有较大的提升。之后Wang 提出的\textbf{GRM}模型，首次在社会关系理解任务上引入先验知识，论文的先验知识指的是物体和社会关系的共现频率，通过GGNN对先验知识的建模，提升了模型的效果。这些工作均说明了，单纯从图像特征上来判别社会关系，其能达到的效果是有限的，因此引入更多的约束，这些约束包括外部信息和内部信息，并对这些信息进行建模是一个解决方案。
+最后，本文对社会关系理解的近年工作进行了回顾，Li等人提出的Dual-glance包含两个部分，其主要思想是利用物体检测模块的RPN 网络生成的物体候选区域来当作上下文，用该特征来提存由人的区域提取得到的特征向量，该方法相比基准模型有较大的提升。之后Wang等人提出的GRM 模型，首次在社会关系理解任务上引入先验知识，论文的先验知识指的是物体和社会关系的共现频率，通过GGNN对先验知识的建模，提升了模型的效果。这些工作均说明了，单纯从图像特征上来判别社会关系，其能达到的效果是有限的，因此引入更多的约束，这些约束包括外部信息和内部信息，并对这些信息进行建模是一个解决方案。
 
 
 

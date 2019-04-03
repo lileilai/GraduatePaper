@@ -3,7 +3,7 @@
 \chapter{实验设计与分析}
 \label{ch:exp}
 
-本章将利用社会关系理解的数据集对上一章提到的PPRN模型进行检测任务的验证，具体来说即识别出图片中两个标定坐标人的关系类别。本章首先介绍当前所用到的两个数据集训练/验证/测试的数据分布情况，数据集的特点。再介绍若干对比模型，介绍实验的参数设置，然后分别对实验结果进行说明和分析，并且对其中消息池化进行了不同实现方法的对比。最后通过案例研究的方法来分析PPRN模型在关系补全任务中发挥的效果。
+本章将利用社会关系理解的数据集对上一章提到的PPRN模型进行社会关系图谱生成的验证，具体来说即识别出图片中两个标定坐标人的关系类别。本章首先介绍当前所用到的两个数据集训练/验证/测试的数据分布情况，数据集的特点。再介绍若干对比模型，介绍实验的参数设置，然后分别对实验结果进行说明和分析，并且对其中消息池化进行了不同实现方法的对比。最后通过案例研究的方法来分析PPRN模型在社会关系图谱生成中发挥的效果。
 
 \section{数据集}
 
@@ -137,7 +137,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 \end{split}
 \end{equation}
 
-在预训练模型，包括ResNet-101和Vgg-16最后一层的维度都是是4096，经过全连接层，在消息传递和池化模块的中的编码长度为512。结合周边物体信息模块中注意力机制的attention\_size=30，在微调ResNet-101和Vgg-16，卷积层学习率设置为$1 \times 10^{-4}$，新增的分类层学习率为$1 \times 10^{-3}$。训练时，学习率设置为$1 \times 10^{-4}$，权重衰减为$5 \times 10^{-4}$。消息传递和池化模块的迭代数$T=4$。 并且微调时的优化方法是SGD，训练迭代模块的优化方法是Adam。
+在预训练模型，包括ResNet-101和Vgg-16最后一层的维度都是是4096，经过全连接层，在消息传递和池化模块的中的编码长度为512。结合周边物体信息模块中注意力机制的attention\_size=30。对于RPN网络的检测框，我们设定取得分最高的30个检测框。在微调ResNet-101 和Vgg-16，卷积层学习率设置为$1 \times 10^{-4}$，针对任务设定的分类层学习率为$1 \times 10^{-3}$。训练时，学习率设置为$1 \times 10^{-4}$，权重衰减为$5 \times 10^{-4}$。对于PISC-coarse和PISC-fine数据集，消息传递和池化模块的迭代数$T=4$，PIPA-relation数据集，迭代次数为$T=3$。 微调时的优化方法是SGD，训练迭代模块的优化方法是Adam。
 
 \section{PISC数据集实验结果}
 在实验中，本文主要与以下几个模型进行对照，在我们的整体框架中，主要的有特征提取模块（m0）、消息传递和池化模块（m1），周边物体信息模块（m2），对于m0和m1组成的网络为PPRN-obj（简称PPRN），而m0、m1和m2三个模块一起的模型称为PPRN+obj：
@@ -146,10 +146,10 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
     \item \textbf{Pair CNN}\cite{li2017dual-glance}由两个共享参数的CNNs提取两个修剪出来的图像特征进行分类。
     \item \textbf{Pair CNN + BBox + Union}\cite{li2017dual-glance}在前面两个特征提取模块的基础上，进一步结合两个个体包围盒的位置信息。
     \item \textbf{Dual-glance}\cite{li2017dual-glance}实现两个粒度的分类任务，分别是PISC-coarse 和PISC-fine，分别包含三种和6中类别的关系。Dual-glance利用了PairCNN+BBox+Union，以及物体区域的特征来提存预测结果。
-    \item GRM\cite{wang2018deep}提出了一个图推理模型来提升社会关系理解任务，该模型集成物体和社会关系共现概率的先验知识，GRM采用的是人对特征和上下文物体特征之间的消息传递。
+    \item \textbf{GRM}\cite{wang2018deep}提出了一个图推理模型来提升社会关系理解任务，该模型集成物体和社会关系共现概率的先验知识，GRM采用的是人对特征和上下文物体特征之间的消息传递。
 \end{itemize}
 
-在表\ref{tab:exp-result-1}中，我们展示了在PISC数据集上，按照每个类别的召回率和``mAP''的设定得到的实验结果，这里需要说明的是因为在PIS\_coarse中的关系粒度已经是最粗的，所以在实际实现过程中只存在关系损失，domain loss只在PISC\_fine 和PIPA数据集上进行了实验。
+在表\ref{tab:exp-result-1}中，我们展示了在PISC数据集上，按照每个类别的召回率和``mAP''的设定得到的实验结果，这里需要说明的是因为在PISC-coarse中的关系粒度已经是最粗的，所以在实际实现过程中只存在关系损失，domain loss只在PISC\_fine 和PIPA数据集上进行了实验。
 \begin{table*}[htpb]
   \centering
   \caption{在PISC-coarse上的实验结果，单位为百分比(\%)}
@@ -259,6 +259,8 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
 		PPRN(attention) & \textbf{75.1} & \textbf{81.8} & \textbf{65.7} & \textbf{69.7} \\
 		\midrule
 		PPRN+obj  & 74.9 & 81.2 & 65.3 & 69.1 \\
+        \midrule
+		PPRN+d  & - & - & \textbf{66.2} & \textbf{72.0} \\
 		\midrule
 	\end{tabular}
 \end{table}
@@ -276,10 +278,6 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
 除此之外，为了观察PPRN+d(PPRN-obj+domain loss)在社会关系理解任务上的具体表现，我们在PISC-fine的测试集中随机抽取了部分图片，并且列出了他们的具体表现。在图\ref{fig:exp-case-study}中，我们分别展示了4个样例的结果，左边代表原图片，右边是社会关系图谱，其中(A)表示标注，(B)表示我们模型构建的社会关系图谱，(C)表示基准模型中GRM的结果。其中图片中人的包围盒的颜色对应社会关系图谱中节点的颜色，节点间不同颜色的边表示不同的社会关系，在图
 \ref{fig:exp-case-study}中列出了颜色和关系的对应表。从这四个例子来看，相比于GRM生成的社会关系图谱(C)，(B)的准确率和mAP更高。并且这四个例子都有各共同点，(B)中每张图超过一半的人对关系都预测为是一样的，如\ref{sec:exp-dataset-ana}提到的，每张图片的场景是稳定的，每张图片包含的社会关系几乎是相似或者是一样的。因此，本文提出的模型恰好能利用上这个线索，对于第样例(a)来说，有两类关系，{\it Commercial}和
 {\it No Relation}， 橘色包围盒的人和绿色包围盒的人之间的关系在GRM 中错误的预测为{\it couple}，但是PPRN能正确的分类。就这张图片来说，PPRN的准确率是100\%，但是GRM是33.3\%。
-
-直观来看，{\it Friend}和{\it Commercial}很难预测，并且这也符合所有的模型来说在fine-level的识别结果。以本文提出的为例，在fine-level的召回混淆矩阵如图\ref{fig:exp-confu-fine}所示，相比其他非亲密的关系，（{\it Friend}，{\it Couple}，{\it Family}）这三种关系之间更容易相互混淆，意味着他们有相似的特征。但是，非亲密的关系({\it Professional}，{\it Commercial})互相之间不存在容易混淆的情况。同理，如图
-\ref{fig:exp-confu-coarse}所示，为coarse-level的混淆矩阵，{\it Intimate}容易和{\it No-relation}之间互相混淆，而{\it Non-intimate}相比{\it No-relation}，更容易与{\it Intimate}混淆。
-此外，图\ref{fig:exp-error-case}给出了一些错误的测例，例如第一行第一张图，模型错误的将夫妻关系分类为朋友关系。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -290,6 +288,10 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
 	\vspace*{-3.5mm}
 	\label{fig:exp-confu-fine}
 \end{figure}
+
+直观来看，{\it Friend}和{\it Commercial}很难预测，并且这也符合所有的模型来说在fine-level的识别结果。以本文提出的为例，在fine-level的召回混淆矩阵如图\ref{fig:exp-confu-fine}所示，相比其他非亲密的关系，（{\it Friend}，{\it Couple}，{\it Family}）这三种关系之间更容易相互混淆，意味着他们有相似的特征。但是，非亲密的关系({\it Professional}，{\it Commercial})互相之间不存在容易混淆的情况。同理，如图
+\ref{fig:exp-confu-coarse}所示，为coarse-level的混淆矩阵，{\it Intimate}容易和{\it No-relation}之间互相混淆，而{\it Non-intimate}相比{\it No-relation}，更容易与{\it Intimate}混淆。
+此外，图\ref{fig:exp-error-case}给出了一些错误的测例，例如第一行第一张图，模型错误的将夫妻关系分类为朋友关系。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
