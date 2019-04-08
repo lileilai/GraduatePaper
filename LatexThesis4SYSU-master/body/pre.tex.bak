@@ -40,7 +40,7 @@
     \midrule
     sigmoid函数 & $\sigma(x) = \frac{1}{1+e^{-x}}$ & $f^{'}(x)=\sigma(x)(1-\sigma(x))$  &  (0,1) \\ \\
     tanh函数 & $tanh(x) = \frac{e^x-e^{-x}}{e^x+e^{-x}}$ & $f^{'}(x)=1-tanh(x)^{2}$ & (-1,1) \\ \\
-    ReLU函数 & ~~~~~$relu(x) = max(0,x)$  &  $sgn(x)=\left\{ \begin{aligned} 1, x\geq 0 \\ 0, x<0 \\ \end{aligned} \right.$ & $ [0,+\infty)$ \\ \\
+    ReLU函数 & ~~~~~$relu(x) = max(0,x)$  &  $f^{'}(x)=\left\{ \begin{aligned} 1, x\leq 0 \\ 1, x>0 \\ \end{aligned} \right.$ & $ [0,+\infty)$ \\ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -177,7 +177,7 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 
 \subsubsection{循环神经网路}
 
-循环神经网络（RNN）是神经网络的一种，主要用于处理序列序列建模问题。其基本结构如图\ref{fig:rnn} 所示，相比其他类型的网络，其就是对神经网络展开k 个步骤，所有的输入共享一个网络模块\textbf{S} 。假设其中的参数为$\mathbf{W}_s$ 和$\mathbf{W}_x$，那么所有模块的这个两个参数是共享的。对于标准的RNN 结构，第t 步，RNN的输出向量$\mathbf{s}_t$如公式\ref{eq:rnn}所示计算。
+循环神经网络（RNN）是神经网络的一种，主要用于处理序列建模问题。其基本结构如图\ref{fig:rnn} 所示，相比其他类型的网络，其就是对神经网络展开k 个步骤，所有的输入共享一个网络模块\textbf{S} 。假设其中的参数为$\mathbf{W}_s$ 和$\mathbf{W}_x$，那么所有模块的这个两个参数是共享的。对于标准的RNN 结构，第t 步，RNN的输出向量$\mathbf{s}_t$如公式\ref{eq:rnn}所示计算。
 \begin{equation}\label{eq:rnn}
     s_t = \mathbf{tanh}(\mathbf{W}_s*h_{t-1}+\mathbf{W}_x*x_{t}+b)
 \end{equation}
@@ -215,16 +215,16 @@ CRF引入了特征函数（指数函数的形式）,对于其中的特例线性�
 RCNN的主要缺点是对于一张图片中的每个感兴趣区域，需要遍历提取其中的特征，然后依次执行物体的分类和物体框的回归，需要耗费较多时间。由于全卷积和池化层不改变某个区域在特征图和原图的位置，因此fast-RCNN 在RCNN 的基础上提出了ROI(region of interest) 池化层，将图片输入到卷积神经网络中，对于特征图上的区域，经过ROI池化层进行调整，然后再继续之后的全连接层和一个线性回归层进行分类和目标框的确定。综上，fast-RCNN 较大程度上提高了物体检测的性能。由于fast-RCNN 在大数据集上的表现依然不能满足实际的需求，因为RCNN和fast-RCNN 均采用选择性搜索的方法得到所需要的区域，这个步骤是比较耗费时间。因此faster-RCNN 提出RPN（region proposal network），RPN网络主要包括两部分，一部分主要是对生成的锚点(anchors)进行判断是foreground 还是background，其中foreground 代表目标，另外一部分主要是对检测框的位置进行调整。经过RPN 网络后得到候选区域，再利用ROI 池化得到特征向量进行物体类别的判断和物体框的进一步精确判断。
 
 
-综上，以上的篇幅主要是回顾了在社会关系检测的工作中，已有的物体检测方法和一些相关工作。结论是得益于GPU 等硬件设备的发展，物体识别领域的算法也得到了快速的发展，尤其是随着特征提取模块的发展，卷积网络越来越深，能学习到更多更丰富的特征。对于一幅图片，我们能在得到更多的、更准确的物体框和类别。
+综上，以上的篇幅主要是回顾了在社会关系检测的工作中，已有的物体检测方法和一些相关工作。结论是得益于GPU 等硬件设备的发展，物体识别领域的算法也得到了快速的发展，尤其是随着特征提取模块的发展，卷积网络越来越深，能学习到更多更丰富的特征。对于一幅图片，我们能够得到更多的、更准确的物体检测框坐标和类别。
 
 \section{社会关系检测}
 本章将回顾社会关系检测领域的一些相关工作，并且对于消息传递机制的介绍，以及消息传递机制的相关工作的一些介绍。
 
 \subsection{已有工作的介绍}
 
-社会关系检测是社交网络的一个基础\cite{li2015celebritynet}，社会关系检测作为一个重要的多学科问题，在计算机视觉领域受到越来越多的关注。随着这个问题被提出以来，有大量的工作用于从图片中抽取两个人之间的社会关系。主要有Wang 等人（2010）\cite{wang2010seeing}，以及Dibeklioglu等人（2013）\cite{dibeklioglu2013like}和Zhang 等人（2015）\cite{zhang2015learning}提出的利用面部表情、年龄、性别、姿势等多种特征的联合模型。Li 等人（2017）\cite{li2017dual-glance}提出的多次观察的\textbf{dual-glance}模型。以及Wang 等人（2018）\cite{wang2018deep}提出的基于常识知识的深度推理模型\textbf{GRM}。以及从视频中抽取社会关系的工作ding 等人（2010）\cite{ding2010learning}、Ramanathan等人 （2013）\cite{ramanathan2013social}。Sun等人（2017）\cite{sun2017a}基于范围的理论，将社会关系划分为5 个范围，同时接着这五个范围又划分为16 种社会关系并且扩充了PIPA（people in photo album）数据集\cite{zhang2015beyond}，得到了PIPA-relation。
+社会关系检测是社交网络的一个基础，社会关系检测作为一个重要的多学科问题，在计算机视觉领域受到越来越多的关注。随着这个问题被提出以来，有大量的工作用于从图片中抽取两个人之间的社会关系。主要有Wang 等人（2010）\cite{wang2010seeing}，以及Dibeklioglu等人（2013）\cite{dibeklioglu2013like}和Zhang 等人（2015）\cite{zhang2015learning}提出的利用面部表情、年龄、性别、姿势等多种特征的联合模型。Li 等人（2017）\cite{li2017dual-glance}提出的多次观察的Dual-glance模型。以及Wang 等人（2018）\cite{wang2018deep}提出的基于常识知识的深度推理模型GRM。以及从视频中抽取社会关系的工作ding 等人（2010）\cite{ding2010learning}、Ramanathan等人 （2013）\cite{ramanathan2013social}。Sun等人（2017）\cite{sun2017a}基于关系域的理论，将社会关系划分为5 个关系域，同时接着这五个关系域又划分为16 种社会关系并且扩充了PIPA（people in photo album）数据集\cite{zhang2015beyond}，得到了PIPA-relation。
 
-Zhang~等人\cite{zhang2015learning}提出的模型认为从心理学的角度出发，认为人的关系主要由人的面部表情的一些特点决定的。首先，模型设计了一个基准模型用于提取图片中两个人对的特征，对于两个人对，基准模型采用共享参数的深度卷积网络（DCN），利用DCN 提取得到的特征分别记为$\mathbf{x}^r,\mathbf{x}^l$，并且$\forall \mathbf{x}^r,\mathbf{x}^l \in R^{2048 \times 1}$，经过一个权重矩阵$\mathbf{W} \in R^{4096 \times 256}$ 得到特征向量$x_t$。 对于已经标注好的人脸图片两个人脸分别为和，利用DCN 提取得到的特征分别记为和，并且。除了图片中本来的特征，模型利用了两张人脸在图片的空间信息。1）两张人脸的位置分别表示为${x^l,y^l,w^l,h^l,x^r,y^r,w^r,h^r}$，其中$x-,y-$是左上角的坐标，$w,h$ 分别是两个人脸包围盒的宽度和高度。2）人脸的相对位置$\frac{x^l-x^r}{w^l},\frac{y^l-y^r}{h^l}$。3）人脸之间的比例$\frac{w^l}{w^r}$。 以上的三项空间特征会和DCN 得到的$\mathbf{x}_t$ 拼接来学习得到关系类别。
+Zhang~等人\cite{zhang2015learning}提出的模型认为从心理学的角度出发，认为人的关系主要由人的面部表情一些特点决定的。首先，模型设计了一个基准模型用于提取图片中两个人对的特征，对于两个人对，基准模型采用共享参数的深度卷积网络（DCN），利用DCN 提取得到的特征分别记为$\mathbf{x}^r,\mathbf{x}^l$，并且$\forall \mathbf{x}^r,\mathbf{x}^l \in R^{2048 \times 1}$，经过一个权重矩阵$\mathbf{W} \in R^{4096 \times 256}$ 得到特征向量$x_t$~。并且。除了图片中本来的特征，模型利用了两张人脸在图片的空间信息。1）两张人脸的位置分别表示为${x^l,y^l,w^l,h^l,x^r,y^r,w^r,h^r}$，其中$x^l,y^l$是左上角的坐标，$w^l,h^l$ 分别是两个人脸包围盒的宽度和高度。2）人脸的相对位置$\frac{x^l-x^r}{w^l},\frac{y^l-y^r}{h^l}$。3）人脸之间的比例$\frac{w^l}{w^r}$。 以上的三项空间特征会和DCN 得到的$\mathbf{x}_t$ 拼接来预测关系类别。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
@@ -246,29 +246,30 @@ Zhang~等人\cite{zhang2015learning}提出的模型认为从心理学的角度�
 \end{equation}
 基于以上的工作，该模型同样认为人的面部属性对最终的关系预测可以起到关键的作用。
 
-Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会关系理解的务提出了包含两个关系粒度的数据集，PISC-coarse 和PISC-fine （2017）\cite{li2017dual-glance}。该工作首次提出利用图片中的场景来协助预测两个人之间的关系，场景具体表示为该图片中的物体区域。直观来说，如果一幅图片中包含电脑桌子等物体，那么大概率是``同事''关系。dual-glance模型分为两个模块，first glance 和second glance，first glance 的输入为一张图片$\mathbf{I}$ 和两个人身体的包围盒。针对图片$\mathbf{I}$，首先修剪出3 个小块，前两个小块分别覆盖住两个人，$p_1$ 和$p_2$，第三个小块覆盖两个人，表示为$p_{u}$。 这三个小块的像素被修正为$224 \times 224$ 大小，作为后续三个CNNs 网络的输入，其中$p_1$ 和$p_2$ 的特征抽取网络是共享网络参数的。此外，包围盒的位置信息对于视觉信息是一种补充，例如亲密关系往往的离得比较近的，无关系的两个人对的包围盒离的较远。位置信息$\mathbf{g}$，经过预训练的ResNet\cite{he2016deep} 抽取得到表示人对关系的特征向量为$\mathbf{v}$，经过拼接和全连接网络后得到这个人对的特征向量$\mathbf{v}_{top}$。
+Li等人（2017）\cite{li2017dual-glance}基于之前的工作，针对社会关系理解的任务提出了包含两个关系粒度的数据集，PISC-coarse 和PISC-fine （2017）\cite{li2017dual-glance}。该工作首次提出利用图片中的场景来协助预测两个人之间的关系，场景具体表示为该图片中的物体区域。直观来说，如果一幅图片中包含电脑、桌子等物体，那么大概率是``同事''关系。dual-glance模型分为两个模块，first glance 和second glance，first glance 的输入为一张图片$\mathbf{I}$ 和两个人身体的包围盒。针对图片$\mathbf{I}$，首先修剪出3 个小块，前两个小块分别覆盖住两个人，$p_1$ 和$p_2$，第三个小块覆盖两个人，表示为$p_{u}$~。 这三个小块的图片区域被修正为$224 \times 224$ 大小，作为后续三个CNNs 网络的输入，其中$p_1$ 和$p_2$ 的特征抽取网络是共享网络参数的。此外，包围盒的位置信息对于视觉信息是一种补充，例如亲密关系往往离的比较近，无关系的两个人的包围盒离的较远。位置信息$\mathbf{g}$，经过预训练的ResNet\cite{he2016deep} 抽取得到表示人对关系的特征向量为$\mathbf{v}$，经过拼接和全连接网络后得到这个人对的特征向量$\mathbf{v}_{top}$。
 
-对于second glance模块，模型利用faster-RCNN\cite{ren2015faster}中的RPN产生一系列的区域候选框$P_{I}$，这些候选框包含物体的概率大于超参数$m$。 对于一个人对，我们从集合$P_{I}$ 中选择部分候选框$R(b1,b2;I)$，选择方式如\ref{eq:select-rp}，其中函数$G(b1,b2)$表示两个包围盒的IOU，$\tau_{u}$是阀值。
+对于second glance模块，模型利用faster-RCNN\cite{ren2015faster}中的RPN产生一系列的区域候选框$P_{I}$，这些候选框包含物体的概率大于超参数$m$。 对于一个人对，我们从集合$P_{I}$ 中选择部分候选框$R(b1,b2;I)$，选择方式如
+\ref{eq:select-rp}，其中函数$G(b1,b2)$表示两个包围盒的IOU，$\tau_{u}$是阀值。
 \begin{equation}\label{eq:select-rp}
     R(b1,b2;I) = \{c \in P_{I} : max(G(c,b1),G(c,b2))<\tau_{u}\}
 \end{equation}
 利用faster-RCNN得到的特征图，采用ROI pooling抽取出固定长度的特征向量$v \in R^{k}$。 同时用$\{v_i|i=1, 2, .... N\}$作为$R_(v1,b2;I)$ 中的物体向量集合。然后依次采用公式\ref{eq:atten-1} 方式将$\mathbf{v}_{top}$ 和物体的向量集合得到$h_i$。
 \begin{equation}\label{eq:atten-1}
-    \mathbf{h_i} = \mathbf{v_i} + \mathbf{w_{top}} \otimes \mathbf{v_{top}}
+    \mathbf{h_i} = \mathbf{v_i} + \mathbf{w_{top}} \otimes \mathbf{v}_{top}
 \end{equation}
-之后采用attention的方式将$\mathbf{h_i}$得到最终的得分$\mathbf{s_i}$，具体细节如公式\ref{eq:atten-2} 所示，其中attention 的权重$a_{i} \in [0,1]$
+之后采用attention机制将$\mathbf{h_i}$得到最终的得分$\mathbf{s_i}$，具体细节如公式\ref{eq:atten-2} 所示，其中attention 的权重$a_{i} \in [0,1]$
 \begin{equation} \label{eq:atten-2}
     \begin{split}
         a_{i} &= \frac{1}{1+exp(-(W_{h,a}h_{i}+b_{a}))} \\
         ~v^{att}_{i} &= a_{i}v_{i} \\
-        s_{i} &= W_{s} v_{i}^{att} + b_{s}
+        \mathbf{s_i} &= W_{s} v_{i}^{att} + b_{s}
     \end{split}
 \end{equation}
 
-GRM（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的信息对于判断人对之间的社会关系是有帮助的，但是现有的模型忽略了周边物体的语义和这些物体以及社会关系的先验知识。除此之外，周边物体和社会关系的交互太过简化了。因此，GRM采用深度学习结合先验知识制定了一个图推理模型（Graph Reasoning Model）来实现社会关系检测任务。首先，GRM 基于训练集中的样本构建了一个描述物体和社会关系共现的图谱。形式化来说，先验知识图谱表示为$\mathrm{G} = \{\mathrm{V},\mathrm{A}\}$，其中$\mathrm{V}$ 表示图上的节点集合，$\mathrm{A}$ 表示节点间的邻接矩阵。当前的图$\mathrm{G}$ 包含两种节点类型，一种节点表示关系节点，一种表示物体节点，针对当前图片场景构建的图的节点来说，采用相应图片对应区域抽取出的特征向量初始化。对于社会关系节点，这里采用Li等人的方式\cite{li2017dual-glance}的方式修剪出三部分包含人的区域，利用预训练好的ResNet提取出特征向量，与空间信息等特征向量进行拼接得到一个$d$维的特征向量$f_{h},f_{h} \in \mathrm{R}^d$。$f_h$ 作为所有社会关系节点的初始化向量。对于物体节点来说，我们需要用到在大规模训练集上预先训练好的faster-RCNN\cite{ren2015faster}，由于PISC和PIPA-relation等数据集均没有标注好的物体类别。这里的大规模数据集指的是COCO\cite{lin2014microsoft}，COCO是专门为了物体识别标注的数据集，包含我们日常生活中常见的80 类的物体。利用物体检测模型提取出高于置信度$\phi$ （$\phi$是一个超参数），对于这里未检测到的物体，采用全$0$ 的特征向量。
+GRM（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的信息对于判断人对之间的社会关系是有帮助的，但是现有的模型忽略了周边物体的语义和这些物体与社会关系共现的先验知识。除此之外，周边物体和社会关系的交互太过简化了。因此，GRM 采用深度学习结合先验知识制定了一个图推理模型（Graph Reasoning Model）来实现社会关系检测任务。首先，GRM 基于训练集中的样本构建了一个描述物体和社会关系共现的图谱。形式化说明如下：构建的先验知识图谱表示为$\mathrm{G} = \{\mathrm{V},\mathrm{A}\}$，其中$\mathrm{V}$ 表示图上的节点集合，$\mathrm{A}$ 表示节点间的邻接矩阵。当前的图$\mathrm{G}$ 包含两种节点类型，一种节点表示关系节点，一种表示物体节点，针对先验知识图谱的物体节点来说，采用相应图片中物体区域提取出的特征向量初始化。对于社会关系节点，这里采用Li等人的方式\cite{li2017dual-glance}的方式修剪出三部分包含人的区域，利用预训练好的ResNet提取出特征向量，与空间信息等特征向量进行拼接得到一个$d$维的特征向量$f_{h},f_{h} \in \mathrm{R}^d$。$f_h$ 作为所有社会关系节点的初始化向量。对于物体节点来说，我们需要用到在大规模训练集上预先训练好的faster-RCNN\cite{ren2015faster}，由于PISC和PIPA-relation等数据集均没有标注好的物体类别。这里的大规模数据集指的是COCO\cite{lin2014microsoft}，COCO是专门为了物体识别标注的数据集，包含我们日常生活中常见的80 类的物体。利用物体检测模型提取出高于置信度$\phi$ （$\phi$是一个超参数），对于这里未检测到的物体，采用全$0$ 的特征向量。
 之后利用GGNN(Gated Graph Neural Network)网络\cite{li2016gated}来执行图上的消息传递。通过GGNN，能探索人对和图片场景中物体的交互。物体的类别是一个关键的因素用于区分不同的社会关系，但是由于有的物体的信息对于判定社会关系时不重要的、甚至起到了干扰的作用，因此GRM 提出了图注意力的机制，有选择的采用能起到区分不同社会关系的物体节点，按照区分能力的大小给予不同的权重。综上所述，GRM模型提供了一个可解释的方法来提高社会关系检测的能力，从周边场景中推理得到有效的信息。
 
-前文提到了图片上人对的特征和物体的信特征抽取，GRM接下来需要执行不同节点间的信息传递，对于其中GGNN 的执行过程，对于图$\mathrm{G}$ 中的节点$v$，其对应的隐藏状态为$h_{v}$，GGNN模型融合邻接节点的信息来更新$v$节点隐藏状态，GGNN采用类似于Gated Recurrent Unit（GRU）\cite{cho2014learning}机制的方式实现节点间的信息融合。所以，对于第$t$ 步GRU unit的输入为$a_v^t$和$h_v^t$，$a_v^t$是融合邻接物体节点的信息向量，融合方式如公式\ref{eq-aggre}，其中$A_v^{\tau}$ 代表前面提到的物体和社会关系的邻接矩阵，矩阵的值为它们在训练集中共现的概率。
+前文提到了图片上人对的特征和物体的特征抽取，GRM接下来需要执行不同节点间的信息传递，对于其中GGNN 的执行过程，对于图$\mathrm{G}$ 中的节点$v$，其对应的隐藏状态为$h_{v}$，GGNN模型融合邻接节点的信息来更新$v$节点隐藏状态，GGNN采用类似于Gated Recurrent Unit（GRU）\cite{cho2014learning}机制的方式实现节点间的信息融合。融合方式如公式\ref{eq-aggre}，其中$A_v^{\tau}$ 代表前面提到的物体和社会关系的邻接矩阵，矩阵的值为它们在训练集中共现的概率。
 \begin{equation}\label{eq-aggre}
     a_v^t = A_{v}^{\tau}[~h_1^{t-1}~...~h_{|V|}^{t-1}~]^{\tau} + b
 \end{equation}
@@ -292,7 +293,7 @@ GRM（2018）\cite{wang2018deep}同样认为引入当前人对的周边物体的
 
 然后，回顾了物体检测与识别的三个经典方法RCNN、fast-RCNN和faster-RCNN，按照时间轴的顺序分析每个工作的优点和缺点，RCNN首次提出了基于感兴趣区域的物体检测，但是由于对每张图片的每个区域的特征提取是独立的，所以需要耗费大量的时间。之后的fast-RCNN对于每张图片的所有感兴趣区域只运行一次，然后运用ROI池化的方法，虽然这样极大的降低了检测时间，但对于大规模的真实数据集还是不够理想。而faster-RCNN 从提取感兴趣区域出发，提出RPN 网络替代选择性搜索，极大的提高了检测的速度。
 
-最后，本文对社会关系理解的近年工作进行了回顾，Li等人提出的Dual-glance包含两个部分，其主要思想是利用物体检测模块的RPN 网络生成的物体候选区域来当作上下文，用该特征来提存由人的区域提取得到的特征向量，该方法相比基准模型有较大的提升。之后Wang等人提出的GRM 模型，首次在社会关系理解任务上引入先验知识，论文的先验知识指的是物体和社会关系的共现频率，通过GGNN对先验知识的建模，提升了模型的效果。这些工作均说明了，单纯从图像特征上来判别社会关系，其能达到的效果是有限的，因此引入更多的约束，这些约束包括外部信息和内部信息，并对这些信息进行建模是一个解决方案。
+最后，本文对社会关系理解的近年工作进行了回顾，Li等人提出的Dual-glance包含两个部分，其主要思想是利用物体检测模块的RPN 网络生成的物体候选区域来当作上下文，用该特征来提纯来自人的区域提取得到的关系特征向量，该方法相比基准模型有较大的提升。之后Wang等人提出的GRM 模型，首次在社会关系理解任务上引入先验知识，论文的先验知识指的是物体和社会关系的共现频率，通过GGNN对先验知识的建模，提升了模型的效果。这些工作均说明了，单纯从图像特征上来判别社会关系，其能达到的效果是有限的，因此引入更多的约束，这些约束包括外部信息和内部信息，并对这些信息进行建模是一个解决方案。
 
 
 

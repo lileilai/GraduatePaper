@@ -8,7 +8,6 @@
 \usepackage{subfigure}
 \usepackage{epstopdf}                                 %支持eps图片转换成PDF格式
 \usepackage{tipa}
-\usepackage{multirow}
 \graphicspath{{figures/}}                            % 定义所有的 .eps 文件在 figures 子目录下
 \begin{document}                                     % 开始全文
 \begin{CJK*}{UTF8}{song}                             % 开始中文字体使用
@@ -35,10 +34,10 @@
 \pdfbookmark[0]{目~~录}{mulu}
 \fancypagestyle{plain}{
 	\fancyhf{}
-	%\fancyhead[RO]{\song\xiaosi \leftmark}
-	%\fancyhead[LE]{\song\xiaosi \@ctitle}
+	\fancyhead[RO]{\song\xiaosi \leftmark}
+	\fancyhead[LE]{\song\xiaosi \@ctitle}
 	%\lhead{\song\wuhao \@ctitle}  % 左页眉
-	\rhead{\song\wuhao \leftmark}    % 右页眉
+	%\rhead{\song\wuhao \leftmark}    % 右页眉
 	%\renewcommand{\headrulewidth}{0 pt}
 	\renewcommand{\headrulewidth}{0.5pt}
 	\renewcommand{\footrulewidth}{0pt}
@@ -51,7 +50,7 @@
 %\newpage
 %\thispagestyle{empty}
 %\mbox{}
-\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
+%\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 
 \mainmatter\defaultfont\sloppy\raggedbottom
 \makeatletter
@@ -68,18 +67,17 @@
 \makeatother
 \setcounter{page}{1}                                 % 单独从 1 开始编页码
 \titleformat{\chapter}{\centering\xiaosan\hei}{\chaptername}{2em}{}
+
                                        % 恢复chapter 标题格式要求
 \include{body/intros}
 %\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/pre}
 %\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/model}
-\clearpage{\pagestyle{empty}\cleardoublepage}
-%\include{body/mns}
+%\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
+%\include{body/momns}
 %\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/experiments}
-%\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
-%\include{body/experiment}
 %\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/conclusion}
 \clearpage{\pagestyle{empty}\cleardoublepage}       %本有
