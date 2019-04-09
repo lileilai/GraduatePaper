@@ -97,7 +97,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 
 \section{实验设置}
 
-类似于GRM模型，我们采用的是每个类别的召回率和mAP（mean average precision）。mAP常作为物体检测的衡量标准，它是不同召回值的下最大精度的平均值。举例如下，假设当前图片有五个苹果，首先对物体检测模型所有检测框分类的类别为苹果按得分从大到小排序。依次计算准确率和召回率，这里的准确率指的是TP和FP。 假如总共有10个检测框被识别为苹果，其计算结果如表\ref{tab:exp-map}所示，例如其中的对于排名第三的降本，$\textbf{Precision} = 2/3 = 0.67$，$\textbf{Recall} = 2/5 = 0.4$。
+类似于GRM模型，我们采用的是每个类别的召回率和mAP（mean average precision）。mAP常作为物体检测的衡量标准，它是不同召回值的下最大精度的平均值。举例如下，假设当前图片有五个苹果，首先对物体检测模型所有检测框分类的类别为苹果按得分从大到小排序。依次计算准确率和召回率，这里的准确率指的是TP和FP。 假如总共有10个检测框被识别为苹果，其计算结果如表\ref{tab:exp-map}所示，例如其中的对于排名第三的样本，$\textbf{Precision} = 2/3 = 0.67$，$\textbf{Recall} = 2/5 = 0.4$。
 \begin{table}[htpb]
   \centering
   \caption{mAP计算示例数据}
@@ -145,7 +145,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
     \item \textbf{Union CNN}学习Lu等人\cite{lu2016visual}利用一个CNN网络来预测关系方法，同样利用一个CNN网络来提取人对的联合区域的特征来进行分类任务。
     \item \textbf{Pair CNN}\cite{li2017dual-glance}由两个共享参数的CNNs提取两个修剪出来的图像特征进行分类。
     \item \textbf{Pair CNN + BBox + Union}\cite{li2017dual-glance}在前面两个特征提取模块的基础上，进一步结合两个个体包围盒的位置信息。
-    \item \textbf{Dual-glance}\cite{li2017dual-glance}实现两个粒度的分类任务，分别是PISC-coarse 和PISC-fine，分别包含三种和6中类别的关系。Dual-glance利用了PairCNN+BBox+Union，以及物体区域的特征来提存预测结果。
+    \item \textbf{Dual-glance}\cite{li2017dual-glance}实现两个粒度的分类任务，分别是PISC-coarse 和PISC-fine，分别包含三种和6中类别的关系。Dual-glance利用了PairCNN+BBox+Union，以及物体区域的特征来提纯预测结果。
     \item \textbf{GRM}\cite{wang2018deep}提出了一个图推理模型来提升社会关系理解任务，该模型集成物体和社会关系共现概率的先验知识，GRM采用的是人对特征和上下文物体特征之间的消息传递。
 \end{itemize}
 
@@ -204,8 +204,8 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 \end{table*}
 根据\ref{tab:exp-result-1}和\ref{tab:exp-result-2}所示的实验结果，我们可以得出以下结论:
 \begin{enumerate}
-    \item 首先，Pair CNN + BBox + Global，Dual-glance和GRM都引入了额外的Faster-RCNN\cite{ren2015faster}来抽取当前图片的上下文信息(物体区域)。GRM进一步利用识别出的物体类别构建了物体类别和社会关系类别的语义共现的知识图谱，通过神经网络融入关系类别和上下文线索的先验常识知识，进而来解决社会关系理解问题。需要注意到的是这些模型均引入了额外的检测标注，而这些步骤是会带来额外的噪声和性能消耗的。
-    \item 其次，结合表\ref{tab:exp-result-1}的数据，对于coarse-level的识别，PPRN取得了75.1\% 的准确率，81.8\%的mAP。对于fine-level的识别，PPRN-obj取得了65.6\%的准确率，69.7\% 的mAP。本文提出的模型在fine-level 的识别任务上超过了所有的基准模型。与此同时，PPRN+d(PPRN+domain loss)取得了66.2\%的准确率，72.0\%的mAP，证明了引入domain loss的作用。模型在coarse-level的识别任务上略微低于GRM，但是仍然超过了其它引入了周边物体区域的模型。
+    \item 首先，Pair CNN + BBox + Global，Dual-glance和GRM都引入了额外的Faster-RCNN\cite{ren2015faster}来抽取当前图片的上下文信息(物体区域)。GRM进一步利用识别出的物体类别构建了物体类别和社会关系类别的语义共现的知识图谱，通过神经网络融入关系类别和上下文线索的先验常识知识，进而来解决社会关系理解问题。需要提到的是这些模型均引入了额外的检测标注，而这些步骤是会带来额外的噪声和性能消耗的，而PPRN不存在这些外部因素。
+    \item 其次，结合表\ref{tab:exp-result-1}、表\ref{tab:exp-result-2}的实验数据，对于coarse-level的识别，PPRN取得了75.1\% 的准确率，81.8\%的mAP。对于fine-level的识别，PPRN-obj取得了65.6\%的准确率，69.7\% 的mAP。本文提出的模型在fine-level 的识别任务上超过了所有的基准模型。与此同时，PPRN+d(PPRN+domain loss)取得了66.2\%的准确率，72.0\%的mAP，证明了引入domain loss的作用。模型在coarse-level的识别任务上略微低于GRM，但是仍然超过了其它引入了周边物体区域的模型。
 \end{enumerate}
 
 \section{PIPA-relation数据集实验结果}
@@ -214,7 +214,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微低于不引入关系域损失的PPRN模型。
 \begin{table}[htpb]
   \centering
-  \caption{准确率的单位为百分比 (\%) PPRN-(obj region)在PIPA-relation实验结果}
+  \caption{准确率的单位为百分比 (\%) PPRN、PPRN+d在PIPA-relation实验结果}
    \vspace*{-3.5pt}
   \label{tab:exp-pipa-table}
   \begin{tabular}{c|c}
@@ -275,7 +275,7 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
 
 \section{案例研究}
 
-除此之外，为了观察PPRN+d(PPRN-obj+domain loss)在社会关系理解任务上的具体表现，我们在PISC-fine的测试集中随机抽取了部分图片，并且列出了他们的具体表现。在图\ref{fig:exp-case-study}中，我们分别展示了4个样例的结果，左边代表原图片，右边是社会关系图谱，其中(A)表示标注，(B)表示我们模型构建的社会关系图谱，(C)表示基准模型中GRM的结果。其中图片中人的包围盒的颜色对应社会关系图谱中节点的颜色，节点间不同颜色的边表示不同的社会关系，在图
+除此之外，为了观察PPRN+d(PPRN+domain loss)在社会关系理解任务上的具体表现，我们在PISC-fine的测试集中随机抽取了部分图片，并且列出了他们的具体表现。在图\ref{fig:exp-case-study}中，我们分别展示了4个样例的结果，左边代表原图片，右边是生成社会关系图谱，其中(A)表示标注，(B)表示我们模型构建的社会关系图谱，(C)表示基准模型中GRM的结果。其中图片中人的包围盒的颜色对应社会关系图谱中节点的颜色，节点间不同颜色的边表示不同的社会关系，在图
 \ref{fig:exp-case-study}中列出了颜色和关系的对应表。从这四个例子来看，相比于GRM生成的社会关系图谱(C)，(B)的准确率和mAP更高。并且这四个例子都有各共同点，(B)中每张图超过一半的人对关系都预测为是一样的，如\ref{sec:exp-dataset-ana}提到的，每张图片的场景是稳定的，每张图片包含的社会关系几乎是相似或者是一样的。因此，本文提出的模型恰好能利用上这个线索，对于第样例(a)来说，有两类关系，{\it Commercial}和
 {\it No Relation}， 橘色包围盒的人和绿色包围盒的人之间的关系在GRM 中错误的预测为{\it couple}，但是PPRN能正确的分类。就这张图片来说，PPRN的准确率是100\%，但是GRM是33.3\%。
 \begin{figure}[htpb]
@@ -351,7 +351,7 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
         %\caption{数据集的关系类别统计}
     	\vspace*{-2.5mm}
     }
-    \caption{PISC-fine数据集中，PPRN-(obj region)表现比GRM模型好的部分测试样本}
+    \caption{PISC-fine数据集中，PPRN表现比GRM模型好的部分测试样本}
     \label{fig:exp-case-study}
 \end{figure}
 

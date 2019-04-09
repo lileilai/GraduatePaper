@@ -40,7 +40,7 @@
     \midrule
     sigmoid函数 & $\sigma(x) = \frac{1}{1+e^{-x}}$ & $f^{'}(x)=\sigma(x)(1-\sigma(x))$  &  (0,1) \\ \\
     tanh函数 & $tanh(x) = \frac{e^x-e^{-x}}{e^x+e^{-x}}$ & $f^{'}(x)=1-tanh(x)^{2}$ & (-1,1) \\ \\
-    ReLU函数 & ~~~~~$relu(x) = max(0,x)$  &  $f^{'}(x)=\left\{ \begin{aligned} 1, x\leq 0 \\ 1, x>0 \\ \end{aligned} \right.$ & $ [0,+\infty)$ \\ \\
+    ReLU函数 & ~~~~~$relu(x) = max(0,x)$  &  $f^{'}(x)=\left\{ \begin{aligned} 0, x \leq 0 \\ 1, x>0 \\ \end{aligned} \right.$ & $ [0,+\infty)$ \\ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -136,7 +136,7 @@ ResNet\cite{he2016deep}是何凯明等人(2016)提出的，针对前面网络并
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
-	\includegraphics[width=0.75 \textwidth,clip]{resnet.png}
+	\includegraphics[width=0.65 \textwidth,clip]{resnet.png}
 	%\hspace{0.02\textwidth}
 	%\vspace*{-0.08cm}
     \caption{ResNet残差学习单元示意图}

@@ -10,8 +10,8 @@
 首先，需要提到的是PPRN的输入和现有的模型是存在一些差别。对于Dual-glance和GRM模型来说，输入包括图片、两个人的包围盒坐标。但是，本文模型的输入是以图片为单位而不是人对，每次同时输出一张图片上所有人对的社会关系在第一章的介绍中提到，本文的出发点是希望对人对间的关系进行建模。对于图像的社会关系理解任务，需要识别出图片上每个人对之间的社会关系，但是图像特征的模糊性和不确定性，这是一个很难的任务。利用图上人对之间的关系信息，即结构信息是提高识别效果可行方案。因为经过特征提取模块得到的关系编码已经包含了浅层的类别信息，而对图片上每个人对间关系交互进行建模，是在识别的基础上的高层次的推理。问题定义如公式\ref{eq:model-fram}，$B_{i}$是人i的包围盒的坐标，$I$是输入的图片，$x_{i \rightarrow j}^{relation}$表示人i和人j之间的关系。
 \begin{equation} \label{eq:model-fram}
 \begin{split}
-    x^{*} = argmax_{x}Pr(x~|~I,B_{i}) \\
-    Pr(x~|~I,B_{i}) = \prod_{i=1}^{N}\prod_{j=1}^{N}Pr(x_{i \rightarrow j}^{relation}~|~I,B_{i}) \\
+    x^{*} &= argmax_{x}Pr(x~|~I,B_{i}) \\
+    Pr(x~|~I,B_{i}) &= \prod_{i=1}^{N}\prod_{j \neq i}^{N}Pr(x_{i \rightarrow j}^{relation}~|~I,B_{i}) \\
 \end{split}
 \end{equation}
 
@@ -115,17 +115,17 @@ PPRN主要是由4个模块组成，模型的主要运算模块是向量，以下
 \end{figure}
 
 利用前文提到的RPN网络，对于图片$\bm{I}$，生成是前景的检测框，得到一组检测框$\bm{P}_{I}$，采用预训练的vgg来得到特征图$conv(I)$，对这里的每个检测框，经过一层Roi pooling 层得到固定长度的物体区域特征$\mathbf{v}$。对于图片所有的检测框，从$conv(I)$生成$\{ \mathbf{v}_{i}|i=1,2,....,N\}$特征向量，对于不同的社会关系关系来说，和它关联的物体是比重是不同的，例如对于关系`` 家庭''，`` 碗''的权重比`` 桌子''的权重大的多，所以我们期望对于不同的物体区域引入不同的权重系数。因此，在当前模块中，引入注意力机制
-（attention mechanism），经过消息传递和池化的关系特征编码$\mathbf{v_{top}}$和物体特征编码$\mathbf{v_{i}}$共同决定权重系数的值：
+（attention mechanism），经过消息传递和池化的关系特征编码$\mathbf{v}_{top}$和物体特征编码$\mathbf{v_{i}}$共同决定权重系数的值：
 \begin{equation}
     \mu_{i} = \mathbf{u}^{T}~tanh(~\mathbf{W}_{r}v_{top}+\mathbf{W}_{o}v_{i}~)
 \end{equation}
 \begin{equation}
-    \mathbf{a}_{i} = softmax(\mu_i) = \frac{exp(\mu_{i})}{\sum_{j}^{N}exp(\mu_{j})}
+    a_{i} = softmax(\mu_i) = \frac{exp(\mu_{i})}{\sum_{j}^{N}exp(\mu_{j})}
 \end{equation}
 根据关系得到每个物体区域特征的权重后，各个区域权重分别与物体区域的特征编码相乘，如公式\ref{eq:model-obj-wei}所示：
 \begin{equation}
     \label{eq:model-obj-wei}
-    \mathbf{v_{att}} = \sum_{i}\mu_{i}~\mathbf{v_{i}}
+    \mathbf{v}_{att} = \sum_{i}a_{i}~\mathbf{v}_{i}
 \end{equation}
 最终用于分类的的编码由是将消息传递、池化模块得到的关系编码向量$\mathbf{v_{top}}$，和带权物体特征编码特征向量$\mathbf{v_{att}}$，最终的分类层函数如公式\ref{eq:model-cls}:
 \begin{equation}
