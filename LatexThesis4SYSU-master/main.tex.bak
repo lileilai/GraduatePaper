@@ -80,7 +80,7 @@
 \include{body/experiments}
 %\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/conclusion}
-\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
+%\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 
 %%%%%%%%%%  参考文献  %%%%%%%%%%
 \titleformat{\chapter}{\centering\sihao\hei}{\chaptername}{2em}{}
@@ -93,14 +93,14 @@
 %\nocite{*}                                     % 若将此命令屏蔽掉，则未引用的文献不会出现在文后的参考文献中
 \bibliography{references/reference}             % bib文件名
 \include{references/reference}
+%\clearpage{\pagestyle{empty}\cleardoublepage}   %本有
+%\include{appendix/cmpresult-A}                  %附录 实验结果表
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+%\include{appendix/cmpresult-B}                  %附录 实验结果表
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\include{appendix/paper}                       % 攻读硕士学位期间发表学术论文情况
 \clearpage{\pagestyle{empty}\cleardoublepage}   %本有
-\include{appendix/cmpresult-A}               %附录 实验结果表
-\clearpage{\pagestyle{empty}\cleardoublepage}
-\include{appendix/cmpresult-B}               %附录 实验结果表
-\clearpage{\pagestyle{empty}\cleardoublepage}
-%\include{appendix/paper}                       % 攻读硕士学位期间发表学术论文情况
-\clearpage{\pagestyle{empty}\cleardoublepage}   %本有
-%\include{appendix/acknowledgements}             % 致谢
+\include{appendix/acknowledgements}             % 致谢
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 \clearpage
 \end{CJK*}                                      % 结束中文字体使用

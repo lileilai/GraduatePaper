@@ -56,10 +56,10 @@
 \makeatletter
 \fancypagestyle{plain}{                              % 设置开章页眉页脚风格
     \fancyhf{}
-    \fancyhead[RO]{\song\xiaosi \leftmark}
-    \fancyhead[LE]{\song\xiaosi \@ctitle}
-%    \lhead{\song\wuhao \@ctitle}  % 左页眉
-%    \rhead{\song\wuhao \leftmark}    % 右页眉
+  %  \fancyhead[RO]{\song\xiaosi \leftmark}
+%    \fancyhead[LE]{\song\xiaosi \@ctitle}
+ %  \lhead{\song\wuhao \@ctitle}  % 左页眉
+    \rhead{\song\wuhao \leftmark}    % 右页眉
     \fancyfoot[C]{\song\wuhao ~\thepage~}           % 首页页脚格式
     \renewcommand{\headrulewidth}{0.5pt}
     \renewcommand{\footrulewidth}{0pt}
@@ -98,8 +98,8 @@
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 %\include{appendix/cmpresult-B}                  %附录 实验结果表
 %\clearpage{\pagestyle{empty}\cleardoublepage}
-%\include{appendix/paper}                       % 攻读硕士学位期间发表学术论文情况
-%\clearpage{\pagestyle{empty}\cleardoublepage}   %本有
+\include{appendix/paper}                       % 攻读硕士学位期间发表学术论文情况
+\clearpage{\pagestyle{empty}\cleardoublepage}   %本有
 \include{appendix/acknowledgements}             % 致谢
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 \clearpage
