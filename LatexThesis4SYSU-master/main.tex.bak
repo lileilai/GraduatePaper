@@ -56,10 +56,10 @@
 \makeatletter
 \fancypagestyle{plain}{                              % 设置开章页眉页脚风格
     \fancyhf{}
-    \fancyhead[RO]{\song\xiaosi \leftmark}
-    \fancyhead[LE]{\song\xiaosi \@ctitle}
-%    \lhead{\song\wuhao \@ctitle}  % 左页眉
-%    \rhead{\song\wuhao \leftmark}    % 右页眉
+  %  \fancyhead[RO]{\song\xiaosi \leftmark}
+%    \fancyhead[LE]{\song\xiaosi \@ctitle}
+ %  \lhead{\song\wuhao \@ctitle}  % 左页眉
+    \rhead{\song\wuhao \leftmark}    % 右页眉
     \fancyfoot[C]{\song\wuhao ~\thepage~}           % 首页页脚格式
     \renewcommand{\headrulewidth}{0.5pt}
     \renewcommand{\footrulewidth}{0pt}
@@ -70,7 +70,7 @@
 
                                        % 恢复chapter 标题格式要求
 \include{body/intros}
-%\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
+\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/pre}
 %\clearpage{\pagestyle{empty}\cleardoublepage}       %本有
 \include{body/model}

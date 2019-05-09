@@ -229,10 +229,10 @@
   \renewcommand{\chaptermark}[1]%
     {\markboth{\chaptername \ #1}{}}            % \chaptermark 去掉章节标题中的数字
   %\fancyhead[C]{\song\wuhao \@cheading}  % 页眉
-  \fancyhead[RO]{\song\xiaosi \leftmark}
-  \fancyhead[LE]{\song\xiaosi \@ctitle}
-  %\lhead{\song\wuhao \@ctitle}  % 左页眉
-  %\rhead{\song\wuhao \leftmark}    % 右页眉
+  %\fancyhead[RO]{\song\xiaosi \leftmark}
+  %\fancyhead[LE]{\song\xiaosi \@ctitle}
+  \lhead{\song\wuhao \@ctitle}  % 左页眉
+  \rhead{\song\wuhao \leftmark}    % 右页眉
   \fancyfoot[C]{\song\wuhao ~\thepage~}
 \newlength{\@title@width}
 
@@ -294,54 +294,54 @@
 \end{titlepage}
 
  %空白页
-\newpage
-\thispagestyle{empty}
-\mbox{}
+%\newpage
+%\thispagestyle{empty}
+%\mbox{}
 
-%%%%%%%%%%%%%%%%%%%   Originality Statement  %%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
-\pdfbookmark[0]{论文原创性声明}{originality}
-\chapter*{\centering\sanhao\song\bfseries 论文原创性声明}
-\song\defaultfont
-本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。除文中已经注明引用的内容外，本论文不包含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究作出重要贡献的个人和集体，均已在文中以明确方式标明。本人完全意识到本声明的法律结果由本人承担。
-
-\vspace*{40pt}
-\begin{flushright}
-\setlength{\@title@width}{5cm}
-  {\sihao\song{
-  \begin{tabular}{lc}
-    学位论文作者签名:           &  \underline{\makebox[\@title@width][c]{~}} \\
-    \qquad\qquad\qquad 日~~期:  &  \underline{\makebox[\@title@width][c]{~}} \\
-  \end{tabular}}
- }
-\end{flushright}
-
-%%%%%%%%%%%%%%%%%%   Authorization Statement  %%%%%%%%%%%%%%%%%%%%%%%
-\vspace*{60pt}
-\pdfbookmark[0]{学位论文使用授权声明}{authorization}
-\begin{center}
-  \sanhao\song\bfseries{学位论文使用授权声明}
-\end{center}
-
-\song\defaultfont
-本人完全了解中山大学有关保留、使用学位论文的规定，即：学校有权保留学位论文并向国家主管部门或其指定机构送交论文的电子版和纸质版，有权将学位论文用于非赢利目的的少量复制并允许论文进入学校图书馆、院系资料室被查阅，有权将学位论文的内容编入有关数据库进行检索，可以采用复印、缩印或其他方法保存学位论文。
-
-\vspace*{40pt}
-\begin{center}
-\setlength{\@title@width}{5cm}
-  {\sihao\song{
-  \begin{tabular}{ll}
-    学位论文作者签名: \qquad\qquad\qquad\qquad\qquad  &  导师签名: \qquad\qquad\qquad\\
-    日期: \qquad 年\qquad 月\qquad 日     &  日期: \qquad 年\qquad 月\qquad 日 \\
-  \end{tabular}}
- }
-\end{center}
-\thispagestyle{empty}   % 去掉页码
-
-% 空白页
-\newpage
-\thispagestyle{empty}
-\mbox{}
+%%%%%%%%%%%%%%%%%   Originality Statement  %%%%%%%%%%%%%%%%%%%%%%%
+%\clearpage
+%\pdfbookmark[0]{论文原创性声明}{originality}
+%\chapter*{\centering\sanhao\song\bfseries 论文原创性声明}
+%\song\defaultfont
+%本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。除文中已经注明引用的内容外，本论文不包含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究作出重要贡献的个人和集体，均已在文中以明确方式标明。本人完全意识到本声明的法律结果由本人承担。
+%
+%\vspace*{40pt}
+%\begin{flushright}
+%\setlength{\@title@width}{5cm}
+%  {\sihao\song{
+%  \begin{tabular}{lc}
+%    学位论文作者签名:           &  \underline{\makebox[\@title@width][c]{~}} \\
+%    \qquad\qquad\qquad 日~~期:  &  \underline{\makebox[\@title@width][c]{~}} \\
+%  \end{tabular}}
+% }
+%\end{flushright}
+%
+%%%%%%%%%%%%%%%%%   Authorization Statement  %%%%%%%%%%%%%%%%%%%%%%%
+%\vspace*{60pt}
+%\pdfbookmark[0]{学位论文使用授权声明}{authorization}
+%\begin{center}
+%  \sanhao\song\bfseries{学位论文使用授权声明}
+%\end{center}
+%
+%\song\defaultfont
+%本人完全了解中山大学有关保留、使用学位论文的规定，即：学校有权保留学位论文并向国家主管部门或其指定机构送交论文的电子版和纸质版，有权将学位论文用于非赢利目的的少量复制并允许论文进入学校图书馆、院系资料室被查阅，有权将学位论文的内容编入有关数据库进行检索，可以采用复印、缩印或其他方法保存学位论文。
+%
+%\vspace*{40pt}
+%\begin{center}
+%\setlength{\@title@width}{5cm}
+%  {\sihao\song{
+%  \begin{tabular}{ll}
+%    学位论文作者签名: \qquad\qquad\qquad\qquad\qquad  &  导师签名: \qquad\qquad\qquad\\
+%    日期: \qquad 年\qquad 月\qquad 日     &  日期: \qquad 年\qquad 月\qquad 日 \\
+%  \end{tabular}}
+% }
+%\end{center}
+%\thispagestyle{empty}   % 去掉页码
+%
+% %空白页
+%\newpage
+%\thispagestyle{empty}
+%\mbox{}
 
 
 %%%%%%%%%%%%%%%%%%%   Abstract and Keywords  %%%%%%%%%%%%%%%%%%%%%%%

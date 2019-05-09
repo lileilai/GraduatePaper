@@ -3,21 +3,21 @@
 \chapter{实验设计与分析}
 \label{ch:exp}
 
-本章将利用社会关系理解的数据集对上一章提到的PPRN模型进行社会关系图谱生成的验证，具体来说即识别出图片中两个标定坐标人的关系类别。本章首先介绍当前所用到的两个数据集训练/验证/测试的数据分布情况，数据集的特点。再介绍若干对比模型，介绍实验的参数设置，然后分别对实验结果进行说明和分析，并且对其中消息池化进行了不同实现方法的对比。最后通过案例研究的方法来分析PPRN模型在社会关系图谱生成中发挥的效果。
+本章将利用社会关系理解的数据集对上一章提到的PPRN模型进行社会关系图谱生成的验证，具体来说即识别出图片中两个标定坐标人之间的关系类别。本章首先介绍当前所用到的两个数据集中训练/验证/测试集的数据分布情况，数据集的特点。再介绍若干对比模型，介绍实验的参数设置，然后分别对实验结果进行说明和分析，并且对其中消息池化进行了不同实现方法的对比。最后通过案例研究的方法来具体分析PPRN模型在社会关系图谱生成中发挥的效果。
 
 \section{数据集}
 
 \subsection{数据集简介}
 
 现有大规模社会关系理解的数据集主要有两个：分别是PIPA-relation\cite{sun2017a}数据集和PISC\cite{li2017dual-glance}数据集，下面简单介绍这两个数据集。
-PISC数据集全称是People in social Context，它是Sun等人\cite{sun2017a}在2017年通过人工标注平台得到的数据集，这些图片主要来自Visual Genome\cite{krishna2017visual}、COCO\cite{lin2014microsoft}、YFCC100M\cite{thomee2016yfcc100m:}、instagram 和twitter等社交网站、Google和Bing商业搜索引擎。数据的来源可以保证数据集的图片是足够高的方差，足够数量人的面部表情，以及场景类型。PISC数据集包含22670张图片以及对应的社会关系标注，在PISC数据集上，又包含两个粒度的识别任务，coarse-level和fine-level。如图\ref{fig:exp-pisc-r}所示的划分方式，先是粗粒度的，再到细粒度的关系类别。
+PISC数据集全称是People in social Context，它是Sun等人\cite{sun2017a}在2017年通过人工标注平台得到的数据集，这些图片主要来自Visual Genome\cite{krishna2017visual}、COCO\cite{lin2014microsoft}、YFCC100M\cite{thomee2016yfcc100m:}、instagram 和twitter等社交网站、Google和Bing商业搜索引擎。数据的来源可以保证数据集的图片有足够高的方差，足够数量人的面部表情，以及场景类型。PISC数据集包含22670张图片以及对应的社会关系标注，在PISC数据集上，又包含两个粒度的识别任务，coarse-level和fine-level。如图\ref{fig:exp-pisc-r}所示的划分方式，先是粗粒度的，再到细粒度的关系类别。
 \begin{figure}[htpb]
 	\centering
 	%	\includegraphics[width=0.48 \textwidth, trim=10 10 10 80,clip]{./pic/example_new.pdf}
 	\includegraphics[width=0.98 \textwidth,clip]{pisc-split.png}
 	%\hspace{0.02\textwidth}
 	%\vspace*{-0.08cm}
-    \caption{PISC的关系划分}
+    \caption{PISC\cite{li2017dual-glance}的关系划分}
 	\vspace*{-3.5mm}
 	\label{fig:exp-pisc-r}
 \end{figure}
@@ -97,7 +97,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 
 \section{实验设置}
 
-类似于GRM模型，我们采用的是每个类别的召回率和mAP（mean average precision）。mAP常作为物体检测的衡量标准，它是不同召回值的下最大精度的平均值。举例如下，假设当前图片有五个苹果，首先对物体检测模型所有检测框分类的类别为苹果按得分从大到小排序。依次计算准确率和召回率，这里的准确率指的是TP和FP。 假如总共有10个检测框被识别为苹果，其计算结果如表\ref{tab:exp-map}所示，例如其中的对于排名第三的样本，$\textbf{Precision} = 2/3 = 0.67$，$\textbf{Recall} = 2/5 = 0.4$。
+类似于GRM模型，我们采用的是每个类别的召回率和mAP（mean average precision）。mAP常作为物体检测任务的评价标准，它是不同召回值下最大精度的平均值。举例如下，假设当前图片有五个苹果，首先对物体检测模型所有检测框分类的类别为苹果按得分从大到小排序。依次计算准确率和召回率，这里的准确率指的是TP和FP。 假如总共有10个检测框被识别为苹果，其计算结果如表\ref{tab:exp-map}所示，例如其中的对于排名第三的样本，$\textbf{Precision} = 2/3 = 0.67$，$\textbf{Recall} = 2/5 = 0.4$。
 \begin{table}[htpb]
   \centering
   \caption{mAP计算示例数据}
@@ -137,26 +137,26 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 \end{split}
 \end{equation}
 
-在预训练模型，包括ResNet-101和Vgg-16最后一层的维度都是是4096，经过全连接层，在消息传递和池化模块的中的编码长度为512。结合周边物体信息模块中注意力机制的attention\_size=30。对于RPN网络的检测框，我们设定取得分最高的30个检测框。在微调ResNet-101 和Vgg-16，卷积层学习率设置为$1 \times 10^{-4}$，针对任务设定的分类层学习率为$1 \times 10^{-3}$。训练时，学习率设置为$1 \times 10^{-4}$，权重衰减为$5 \times 10^{-4}$。对于PISC-coarse和PISC-fine数据集，消息传递和池化模块的迭代数$T=4$，PIPA-relation数据集，迭代次数为$T=3$。 微调时的优化方法是SGD，训练迭代模块的优化方法是Adam。
+对于本文使用的预训练模型，包括ResNet-101和Vgg-16最后一层的维度都是是4096，经过全连接层，在消息传递和池化模块的中的编码长度为512。结合周边物体信息模块中注意力机制的attention\_size=30。对于RPN网络的检测框，我们设定取得分最高的30个检测框。在微调ResNet-101和Vgg-16网络时，卷积层学习率设置为$1 \times 10^{-4}$，针对任务设定的分类层学习率为$1 \times 10^{-3}$。训练时，学习率设置为$1 \times 10^{-4}$，权重衰减为$5 \times 10^{-4}$。对于PISC-coarse和PISC-fine数据集，消息传递和池化模块的迭代数$T=4$，PIPA-relation数据集，迭代次数为$T=3$。 微调时的优化方法是SGD，训练迭代模块的优化方法是Adam。
 
 \section{PISC数据集实验结果}
-在实验中，本文主要与以下几个模型进行对照，在我们的整体框架中，主要的有特征提取模块（m0）、消息传递和池化模块（m1），关系和关系域损失(m2)、周边物体信息模块（m3）。对于m0和m1组成的网络为PPRN，而m0、m1、m2三个模块一起的模型称为PPRN+d，所有模块的模型简称为PPRN+d+obj：
+在实验中，本文主要与以下几个模型进行对照，在我们的整体框架中，主要有特征提取模块（m0）、消息传递和池化模块（m1），关系和关系域损失(m2)、周边物体信息模块（m3）。对于m0和m1组成的网络为PPRN，而m0、m1、m2三个模块一起的模型称为PPRN+d，所有模块的模型简称为PPRN+d+obj：
 \begin{itemize}
     \item \textbf{Union CNN}学习Lu等人\cite{lu2016visual}利用一个CNN网络来预测关系方法，同样利用一个CNN网络来提取人对的联合区域的特征来进行分类任务。
     \item \textbf{Pair CNN}\cite{li2017dual-glance}由两个共享参数的CNNs提取两个修剪出来的图像特征进行分类。
-    \item \textbf{Pair CNN + BBox + Union}\cite{li2017dual-glance}在前面两个特征提取模块的基础上，进一步结合两个个体包围盒的位置信息。
-    \item \textbf{Dual-glance}\cite{li2017dual-glance}实现两个粒度的分类任务，分别是PISC-coarse 和PISC-fine，分别包含三种和6中类别的关系。Dual-glance利用了PairCNN+BBox+Union，以及物体区域的特征来提纯预测结果。
+    \item \textbf{Pair CNN + BBox + Union}\cite{li2017dual-glance}在前面两个特征提取模块的基础上，进一步结合两个个体包围盒的联合区域特征和包围盒的位置特征。
+    \item \textbf{Dual-glance}\cite{li2017dual-glance}实现两个粒度的分类任务，分别是PISC-coarse 和PISC-fine，分别包含3种和6种关系类别。Dual-glance利用了PairCNN+BBox+Union，以及物体区域的特征来提纯预测结果。
     \item \textbf{GRM}\cite{wang2018deep}提出了一个图推理模型来提升社会关系理解任务，该模型集成物体和社会关系共现概率的先验知识，GRM采用的是人对特征和上下文物体特征之间的消息传递。
 \end{itemize}
 
-在表\ref{tab:exp-result-1}中，我们展示了在PISC数据集上，按照每个类别的召回率和``mAP''的设定得到的实验结果，这里需要说明的是因为在PISC-coarse中的关系粒度已经是最粗的，所以在实际实现过程中只存在关系损失，domain loss只在PISC-fine 和PIPA数据集上进行了实验。
+在表\ref{tab:exp-result-1}中，我们展示了在PISC数据集上，按照每个类别的召回率和``mAP''的设定得到的实验结果，这里需要说明，因为在PISC-coarse中的关系粒度已经是最粗的，所以在实际实现过程中只存在关系损失，domain loss只在PISC-fine 和PIPA 数据集上进行了实验。
 \begin{table*}[htpb]
   \centering
   \caption{在PISC-coarse上的实验结果，单位为百分比(\%)}
   \label{tab:exp-result-1}
   \begin{tabular}{c|c|c|c|c}
     \toprule
-    评价标准 & Intimate & Non-Intimate & No Relation & mAP  \\
+    模型 & Intimate & Non-Intimate & No Relation & mAP  \\
     \midrule
     Union CNN \cite{lu2016visual} & 72.1 & 81.8 & 19.2 & 58.4   \\
     \midrule
@@ -182,7 +182,7 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
   \label{tab:exp-result-2}
   \begin{tabular}{c|p{1.5cm}<{\centering}|p{0.8cm}<{\centering}|p{0.8cm}<{\centering}|p{0.8cm}<{\centering}|p{0.8cm}<{\centering}|p{0.8cm}<{\centering}|c}
     \toprule
-    评价标准 & \rotatebox[origin=l]{90}{Friends} & \rotatebox[origin=l]{90}{Family} & \rotatebox[origin=l]{90}{Couple} & \rotatebox[origin=l]{90}{Professional} & \rotatebox[origin=l]{90}{Commercial} & \rotatebox[origin=l]{90}{No Relation} &  \rotatebox[origin=l]{90}{mAP}  \\
+     模型& \rotatebox[origin=l]{90}{Friends} & \rotatebox[origin=l]{90}{Family} & \rotatebox[origin=l]{90}{Couple} & \rotatebox[origin=l]{90}{Professional} & \rotatebox[origin=l]{90}{Commercial} & \rotatebox[origin=l]{90}{No Relation} &  \rotatebox[origin=l]{90}{mAP}  \\
     \midrule
     Union CNN  \cite{lu2016visual} & 29.9 & 58.5 & 70.7 & 55.4 & 43.0 & 19.6 & 43.5  \\
     \midrule
@@ -205,12 +205,12 @@ PIPA-relation数据集的全称是People in Photo Album Relation，总共包括3
 根据\ref{tab:exp-result-1}，\ref{tab:exp-result-2}和表\ref{tab:exp-mp-variant}所示的实验结果，我们可以得出以下结论:
 \begin{enumerate}
     \item 首先，Pair CNN + BBox + Global，Dual-glance和GRM都引入了额外的Faster-RCNN\cite{ren2015faster}来抽取当前图片的上下文信息(物体区域)。GRM进一步利用识别出的物体类别构建了物体类别和社会关系类别的语义共现的知识图谱，通过神经网络融入关系类别和上下文线索的先验常识知识，进而来解决社会关系理解问题。需要提到的是这些模型均引入了额外的检测标注，而这些步骤是会带来额外的噪声和性能消耗的，而PPRN不存在这些外部因素。
-    \item 其次，结合表\ref{tab:exp-result-1}、表\ref{tab:exp-result-2}的实验数据，对于coarse-level的识别，PPRN取得了75.1\% 的准确率，81.8\%的mAP。对于fine-level的识别，PPRN-取得了65.6\%的准确率，69.7\% 的mAP。本文提出的模型在fine-level 的识别任务上超过了所有的基准模型。与此同时，PPRN+d(PPRN+domain loss)取得了66.2\%的准确率，72.0\%的mAP，证明了引入domain loss的作用。模型在coarse-level的识别任务上略微低于GRM，但是仍然超过了其它引入了周边物体区域的模型。
+    \item 其次，结合表\ref{tab:exp-result-1}、表\ref{tab:exp-result-2}的实验数据，对于coarse-level的识别，PPRN取得了75.1\% 的准确率，81.8\%的mAP。对于fine-level的识别，PPRN-取得了65.7\%的准确率，69.7\% 的mAP。本文提出的模型在fine-level 的识别任务上超过了所有的基准模型。与此同时，PPRN+d(PPRN+domain loss)取得了66.2\%的准确率，72.0\%的mAP，证明了引入domain loss的作用。模型在coarse-level的识别任务上略微低于GRM，但是仍然超过了其它引入了周边物体区域的模型。
 \end{enumerate}
 
 \section{PIPA-relation数据集实验结果}
 
-在PIPA-relation数据集上，本文将和现有的方法进行对比，例如:Two Stream CNN\cite{sun2017a}，Dual-glance\cite{li2017dual-glance}和GRM\cite{wang2018deep}，这些模型在之前均取得了最好识别效果。本文直接从文献中获取这些模型的数据，如表\ref{tab:exp-pipa-table}所示，由于有的关系的样本数量较少，所有的基准模型均只采用准确率衡量模型的效果，因此本文同样如此。值得提到的是，PPRN明显超过现有的基准模型，比GRM超过2.4\%，比Dual-glance超过5.1\%。
+在PIPA-relation数据集上，本文和现有的方法进行了对比，例如:Two Stream CNN\cite{sun2017a}，Dual-glance\cite{li2017dual-glance}和GRM\cite{wang2018deep}，这些模型在之前均取得了最好识别效果。本文直接从文献中获取这些模型的实验数据，如表\ref{tab:exp-pipa-table}所示，由于有的关系的样本数量较少，所有的基准模型均只采用准确率衡量模型的效果，因此本文同样如此。值得提到的是，PPRN明显超过现有的基准模型，比GRM超过2.4\%，比Dual-glance超过5.1\%。
 PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微低于不引入关系域损失的PPRN模型。
 \begin{table}[htpb]
   \centering
@@ -219,7 +219,7 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
   \label{tab:exp-pipa-table}
   \begin{tabular}{c|c}
     \toprule
-    Methods & accuracy \\
+    模型 & accuracy \\
     \midrule
     Two stream CNN \cite{zhang2015beyond} & 57.2 \\
     \midrule
@@ -271,11 +271,12 @@ PPRN+d(PPRN+domain loss)取得了63.6\%识别率，高于基准模型，轻微�
     \item 其次，在GRM等引入关系类别和物体类别共现的常识知识，很大程度依赖物体的类别是否正确，才能确定加入的常识知识是否正确。第一，例如在当前图片中，检测到了{\it laptop}，容易倾向于推理出当前场景下所有人对关系为{\it professional}，但是Faster-RCNN并不是总能识别正确，所以会带来很大的噪声。第二，检测出的{\it laptop}会帮助{\it professional}关系的正确分类，但是对{\it friends}来说并不存在这样的辅助作用，并且这两类关系在现实数据集和场景中大量存在。
     \item 本文通过引入的domain loss，在PISC-fine上取得了明显的提升，模型通过同时优化relation loss和domain loss，这样两个任务之间可以共享一些信息，并且相互约束，帮助区分属于不同关系域的关系。
     \item 如表\ref{tab:exp-mp-variant}所示，RCNN是只用到了图片中物体信息，是最差的效果。Dual-glance训练了一个基于注意力机制的人对模块根据不同的人对关系来结合不同比重的物体特征。对于模型PPRN+d+obj来说，模型效果并没有提升，依据前面的分析，关系上下文覆盖了周边物体区域上下文的部分，并且实验证明了我们的假设。
+    \item 就目前来看，模型在粗粒度的分类任务上并不如现有的最优模型，图片的场景信息对于判断亲密与否帮助很大。是否可以尝试挖掘更多的信息引入模型，例如年龄，性别，这部分细粒度的特征会帮助细粒度的关系分类，但是目前模型并没有这在这方面进行探索，模型的实验结果虽然由于最优模型，但是是否可以有更大的提升。
 \end{enumerate}
 
 \section{案例研究}
 
-除此之外，为了观察PPRN在社会关系理解任务上的具体表现，我们在PISC-fine的测试集中随机抽取了部分图片，并且列出了他们的具体表现。在图\ref{fig:exp-case-study}中，我们分别展示了4个样例的结果，左边代表原图片，右边是生成社会关系图谱，其中(A)表示标注，(B)表示我们模型构建的社会关系图谱，(C)表示基准模型中GRM的结果。其中图片中人的包围盒的颜色对应社会关系图谱中节点的颜色，节点间不同颜色的边表示不同的社会关系，在图
+除此之外，为了观察PPRN在社会关系理解任务上的具体表现，我们在PISC-fine的测试集中随机抽取了部分图片，并且列出了他们的具体表现。在图\ref{fig:exp-case-study}中，我们分别展示了4个样例的结果，左边代表原图片，右边是生成的社会关系图谱，其中(A)表示标注，(B)表示我们模型构建的社会关系图谱，(C)表示基准模型中GRM的结果。其中图片中人的包围盒的颜色对应社会关系图谱中节点的颜色，节点间不同颜色的边表示不同的社会关系，在图
 \ref{fig:exp-case-study}中列出了颜色和关系的对应表。从这四个例子来看，相比于GRM生成的社会关系图谱(C)，(B)的准确率和mAP更高。并且这四个例子都有各共同点，(B)中每张图超过一半的人对关系都预测为是一样的，如\ref{sec:exp-dataset-ana}提到的，每张图片的场景是稳定的，每张图片包含的社会关系几乎是相似或者是一样的。因此，本文提出的模型恰好能利用上这个线索，对于第样例(a)来说，有两类关系，{\it Commercial}和
 {\it No Relation}， 橘色包围盒的人和绿色包围盒的人之间的关系在GRM 中错误的预测为{\it couple}，但是PPRN能正确的分类。就这张图片来说，PPRN的准确率是100\%，但是GRM是33.3\%。
 \begin{figure}[htpb]
