@@ -1,0 +1,225 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{none/global//global/global}
+  \entry{sun2017a}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=SQ}{%
+         family={Sun},
+         familyi={S\bibinitperiod},
+         given={Qianru},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=SB}{%
+         family={Schiele},
+         familyi={S\bibinitperiod},
+         given={Bernt},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=FM}{%
+         family={Fritz},
+         familyi={F\bibinitperiod},
+         given={Mario},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SQSBFM1}
+    \strng{fullhash}{SQSBFM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of {IEEE} Conference on Computer Vision and
+  Pattern Recognition (CVPR), Honolulu, HI, USA, July}
+    \field{pages}{435\bibrangedash 444}
+    \field{title}{A Domain Based Approach to Social Relation Recognition}
+    \field{year}{2017}
+  \endentry
+
+  \entry{li2017dual-glance}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=LJ}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Junnan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=WY}{%
+         family={Wong},
+         familyi={W\bibinitperiod},
+         given={Yongkang},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=ZQ}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Qi},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=KMS}{%
+         family={Kankanhalli},
+         familyi={K\bibinitperiod},
+         given={Mohan\bibnamedelima S.},
+         giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LJ+1}
+    \strng{fullhash}{LJWYZQKMS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of {IEEE} International Conference on
+  Computer Vision (ICCV), Venice, Italy, October}
+    \field{pages}{2669\bibrangedash 2678}
+    \field{title}{Dual-Glance Model for Deciphering Social Relationships}
+    \field{year}{2017}
+  \endentry
+
+  \entry{wang2018deep}{inproceedings}{}
+    \name{author}{6}{}{%
+      {{hash=WZ}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Zhouxia},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=CT}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Tianshui},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=RJSJ}{%
+         family={Ren},
+         familyi={R\bibinitperiod},
+         given={Jimmy S.\bibnamedelima J.},
+         giveni={J\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim
+  J\bibinitperiod},
+      }}%
+      {{hash=YW}{%
+         family={Yu},
+         familyi={Y\bibinitperiod},
+         given={Weihao},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=CH}{%
+         family={Cheng},
+         familyi={C\bibinitperiod},
+         given={Hui},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=LL}{%
+         family={Lin},
+         familyi={L\bibinitperiod},
+         given={Liang},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WZ+1}
+    \strng{fullhash}{WZCTRJSJYWCHLL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the Twenty-Seventh International Joint
+  Conference on Artificial Intelligence (IJCAI),Stockholm, Sweden, July}
+    \field{pages}{1021\bibrangedash 1028}
+    \field{title}{Deep Reasoning with Knowledge Graph for Social Relationship
+  Understanding}
+    \field{year}{2018}
+  \endentry
+
+  \entry{lu2016visual}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=LC}{%
+         family={Lu},
+         familyi={L\bibinitperiod},
+         given={Cewu},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=KR}{%
+         family={Krishna},
+         familyi={K\bibinitperiod},
+         given={Ranjay},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=BMS}{%
+         family={Bernstein},
+         familyi={B\bibinitperiod},
+         given={Michael\bibnamedelima S.},
+         giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+      {{hash=LF}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Fei{-}Fei},
+         giveni={F\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LC+1}
+    \strng{fullhash}{LCKRBMSLF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of 14th European Conference On Computer
+  Vision (ECCV), Amsterdam, Netherlands, October}
+    \field{pages}{852\bibrangedash 869}
+    \field{title}{Visual Relationship Detection with Language Priors}
+    \field{year}{2016}
+  \endentry
+
+  \entry{zhang2015beyond}{inproceedings}{}
+    \name{author}{5}{}{%
+      {{hash=ZN}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Ning},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=PM}{%
+         family={Paluri},
+         familyi={P\bibinitperiod},
+         given={Manohar},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=TY}{%
+         family={Taigman},
+         familyi={T\bibinitperiod},
+         given={Yaniv},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=FR}{%
+         family={Fergus},
+         familyi={F\bibinitperiod},
+         given={Rob},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=BLD}{%
+         family={Bourdev},
+         familyi={B\bibinitperiod},
+         given={Lubomir\bibnamedelima D.},
+         giveni={L\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZN+1}
+    \strng{fullhash}{ZNPMTYFRBLD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of {IEEE} Conference on Computer Vision and
+  Pattern Recognition (CVPR), Boston, MA, USA, June}
+    \field{pages}{4804\bibrangedash 4813}
+    \field{title}{Beyond frontal faces: Improving Person Recognition using
+  multiple cues}
+    \field{year}{2015}
+  \endentry
+\enddatalist
+\endinput
