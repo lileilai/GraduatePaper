@@ -1,0 +1,194 @@
+% $ biblatex auxiliary file $
+% $ biblatex version 1.7 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\entry{sun2017a}{inproceedings}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Sun}{S.}%
+     {Qianru}{Q.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Schiele}{S.}%
+     {Bernt}{B.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Fritz}{F.}%
+     {Mario}{M.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{SQSBFM1}
+  \strng{fullhash}{SQSBFM1}
+  \field{booktitle}{Proceedings of {IEEE} Conference on Computer Vision and
+  Pattern Recognition (CVPR), Honolulu, HI, USA, July}
+  \field{pages}{435\bibrangedash 444}
+  \field{title}{A Domain Based Approach to Social Relation Recognition}
+  \field{year}{2017}
+\endentry
+
+\entry{li2017dual-glance}{inproceedings}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Li}{L.}%
+     {Junnan}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Wong}{W.}%
+     {Yongkang}{Y.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Zhao}{Z.}%
+     {Qi}{Q.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Kankanhalli}{K.}%
+     {Mohan~S.}{M.~S.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LJ+1}
+  \strng{fullhash}{LJWYZQKMS1}
+  \field{booktitle}{Proceedings of {IEEE} International Conference on Computer
+  Vision (ICCV), Venice, Italy, October}
+  \field{pages}{2669\bibrangedash 2678}
+  \field{title}{Dual-Glance Model for Deciphering Social Relationships}
+  \field{year}{2017}
+\endentry
+
+\entry{wang2018deep}{inproceedings}{}
+  \name{author}{6}{}{%
+    {{}%
+     {Wang}{W.}%
+     {Zhouxia}{Z.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Chen}{C.}%
+     {Tianshui}{T.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Ren}{R.}%
+     {Jimmy S.~J.}{J.~S.~J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Yu}{Y.}%
+     {Weihao}{W.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Cheng}{C.}%
+     {Hui}{H.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Lin}{L.}%
+     {Liang}{L.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{WZ+1}
+  \strng{fullhash}{WZCTRJSJYWCHLL1}
+  \field{booktitle}{Proceedings of the Twenty-Seventh International Joint
+  Conference on Artificial Intelligence (IJCAI),Stockholm, Sweden, July}
+  \field{pages}{1021\bibrangedash 1028}
+  \field{title}{Deep Reasoning with Knowledge Graph for Social Relationship
+  Understanding}
+  \field{year}{2018}
+\endentry
+
+\entry{lu2016visual}{inproceedings}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Lu}{L.}%
+     {Cewu}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Krishna}{K.}%
+     {Ranjay}{R.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Bernstein}{B.}%
+     {Michael~S.}{M.~S.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Li}{L.}%
+     {Fei{-}Fei}{F.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LC+1}
+  \strng{fullhash}{LCKRBMSLF1}
+  \field{booktitle}{Proceedings of 14th European Conference On Computer Vision
+  (ECCV), Amsterdam, Netherlands, October}
+  \field{pages}{852\bibrangedash 869}
+  \field{title}{Visual Relationship Detection with Language Priors}
+  \field{year}{2016}
+\endentry
+
+\entry{zhang2015beyond}{inproceedings}{}
+  \name{author}{5}{}{%
+    {{}%
+     {Zhang}{Z.}%
+     {Ning}{N.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Paluri}{P.}%
+     {Manohar}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Taigman}{T.}%
+     {Yaniv}{Y.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Fergus}{F.}%
+     {Rob}{R.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Bourdev}{B.}%
+     {Lubomir~D.}{L.~D.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{ZN+1}
+  \strng{fullhash}{ZNPMTYFRBLD1}
+  \field{booktitle}{Proceedings of {IEEE} Conference on Computer Vision and
+  Pattern Recognition (CVPR), Boston, MA, USA, June}
+  \field{pages}{4804\bibrangedash 4813}
+  \field{title}{Beyond frontal faces: Improving Person Recognition using
+  multiple cues}
+  \field{year}{2015}
+\endentry
+
+\lossort
+\endlossort
+
+\endinput
